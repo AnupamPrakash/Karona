@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "946974806566",
+    "firebase_url": "https://karona-d773c.firebaseio.com",
+    "project_id": "karona-d773c",
+    "storage_bucket": "karona-d773c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:946974806566:android:bd2cbff10e6a12a8004ce7",
+        "android_client_info": {
+          "package_name": "com.darkworld.karona"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "946974806566-ji04jeo0vgaumnghk55jrl83om9rmign.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.darkworld.karona",
+            "certificate_hash": "d02941db3ffa45278018c8cae2c9853e3c58a394"
+          }
+        },
+        {
+          "client_id": "946974806566-v3o61mkamij0pbrlgr0feqjt264rbvfa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBGVh0WSoqmw2mT8tzfvQizLSc-ms87KY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "946974806566-v3o61mkamij0pbrlgr0feqjt264rbvfa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
