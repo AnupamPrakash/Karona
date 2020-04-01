@@ -5,13 +5,12 @@ import android.net.Uri;
 import java.io.Serializable;
 
 public class User implements Serializable {
-    String name,userId,emailId,alias;
-    Uri photoUrl;
+    String name,userId,emailId,alias,photoUrl;
 
     public User() {
     }
 
-    public User(String name, String userId, String emailId, String alias, Uri photoUrl) {
+    public User(String name, String userId, String emailId, String alias, String photoUrl) {
         this.name = name;
         this.userId = userId;
         this.emailId = emailId;
@@ -51,11 +50,11 @@ public class User implements Serializable {
         this.alias = alias;
     }
 
-    public Uri getPhotoUrl() {
+    public String getPhotoUrl() {
         return photoUrl;
     }
 
-    public void setPhotoUrl(Uri photoUrl) {
+    public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
     }
 }

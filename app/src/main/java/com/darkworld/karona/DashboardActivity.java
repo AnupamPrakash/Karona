@@ -24,7 +24,7 @@ public class DashboardActivity extends AppCompatActivity {
     Button createGame,joinGame;
     FirebaseAuth firebaseAuth;
     FirebaseUser currentUser;
-    User user;
+//    User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +32,7 @@ public class DashboardActivity extends AppCompatActivity {
         createGame = findViewById(R.id.create_game);
         joinGame = findViewById(R.id.join_game);
         firebaseAuth = FirebaseAuth.getInstance();
-        user = (User) getIntent().getSerializableExtra("User");
+//        user = (User) getIntent().getSerializableExtra("User");
         currentUser = firebaseAuth.getCurrentUser();
         if(currentUser==null)
         {
@@ -77,7 +77,7 @@ public class DashboardActivity extends AppCompatActivity {
     private void createLobbyonServer(int rnd) {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference dbRef = firebaseDatabase.getReference().child("Lobbies").child(""+rnd);
-        dbRef.push().setValue(user);
+        dbRef.push().setValue(currentUser.getUid());
         Toast.makeText(this, "Successful: "+dbRef.getDatabase().toString(), Toast.LENGTH_SHORT).show();
     }
 
@@ -108,7 +108,7 @@ public class DashboardActivity extends AppCompatActivity {
     private void joinLobbyonServer(String lobbyCode) {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference dbRef = firebaseDatabase.getReference().child("Lobbies").child(lobbyCode);
-        dbRef.push().setValue(user);
+        dbRef.push().setValue(currentUser.getUid());
         Toast.makeText(this, "Successful: "+dbRef.getDatabase().toString(), Toast.LENGTH_SHORT).show();
     }
 }

@@ -115,13 +115,13 @@ public class MainActivity extends AppCompatActivity {
         DatabaseReference mDatabase;
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());
         getAlias();
-//        customUser= new User(user.getDisplayName(),user.getUid(),user.getEmail(),alias,user.getPhotoUrl());
-//        mDatabase.setValue(customUser);
-        mDatabase.child("name").setValue(user.getDisplayName());
-        mDatabase.child("userId").setValue(user.getUid());
-        mDatabase.child("emailId").setValue(user.getEmail());
-        mDatabase.child("alias").setValue(alias);
-        mDatabase.child("photoUrl").setValue(user.getPhotoUrl());
+        customUser= new User(user.getDisplayName(),user.getUid(),user.getEmail(),alias,user.getPhotoUrl().toString());
+        mDatabase.setValue(customUser);
+//        mDatabase.child("name").setValue(user.getDisplayName());
+//        mDatabase.child("userId").setValue(user.getUid());
+//        mDatabase.child("emailId").setValue(user.getEmail());
+//        mDatabase.child("alias").setValue("Default");
+//        mDatabase.child("photoUrl").setValue(user.getPhotoUrl().toString());
     }
 
     private void getAlias() {
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("Join", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                alias = input.getText().toString();
+//                alias = input.getText().toString();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
