@@ -6,12 +6,14 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="10dp">
+
     <ImageView
+        android:id="@+id/playerdp"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/ic_person_black_24dp"
         android:padding="10dp"
-        android:id="@+id/playerdp" />
+        android:src="@drawable/ic_person_black_24dp" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
