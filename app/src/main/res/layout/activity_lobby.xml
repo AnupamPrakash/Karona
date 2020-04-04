@@ -15,15 +15,15 @@
         android:background="@drawable/lobbyback">
 
         <Button
-            android:id="@+id/button"
+
             android:layout_width="138dp"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_centerVeritcal="true"
             android:layout_marginTop="67dp"
             android:layout_marginEnd="41dp"
             android:background="@drawable/startgamebtn"
             android:text="SHARE code" />
+
     </RelativeLayout>
 
     <TextView
