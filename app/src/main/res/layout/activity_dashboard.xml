@@ -25,6 +25,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="@android:dimen/notification_large_icon_height">
             <!--            join game-->
+
             <ImageView
                 android:id="@+id/join_game"
                 android:layout_width="190dp"

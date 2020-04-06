@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +22,7 @@ import java.util.Random;
 
 public class DashboardActivity extends AppCompatActivity {
 
-    Button createGame,joinGame;
+    ImageView createGame,joinGame;
     FirebaseAuth firebaseAuth;
     FirebaseUser currentUser;
 //    User user;
