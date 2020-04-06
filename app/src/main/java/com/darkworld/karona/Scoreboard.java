@@ -58,7 +58,7 @@ public class Scoreboard extends AppCompatActivity {
                     scoreListAdapter.notifyDataSetChanged();
                     scorelist.setAdapter(scoreListAdapter);
                 }
-
+                progressDialog.dismiss();
             }
 
             @Override
