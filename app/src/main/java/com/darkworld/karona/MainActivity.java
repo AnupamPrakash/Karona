@@ -117,11 +117,6 @@ public class MainActivity extends AppCompatActivity {
         getAlias();
         customUser= new User(user.getDisplayName(),user.getUid(),user.getEmail(),alias,user.getPhotoUrl().toString());
         mDatabase.setValue(customUser);
-//        mDatabase.child("name").setValue(user.getDisplayName());
-//        mDatabase.child("userId").setValue(user.getUid());
-//        mDatabase.child("emailId").setValue(user.getEmail());
-//        mDatabase.child("alias").setValue("Default");
-//        mDatabase.child("photoUrl").setValue(user.getPhotoUrl().toString());
     }
 
     private void getAlias() {
@@ -147,12 +142,10 @@ public class MainActivity extends AppCompatActivity {
     private void loginWithGoogle() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
-
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);

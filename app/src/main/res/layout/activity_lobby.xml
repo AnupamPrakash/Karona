@@ -8,6 +8,13 @@
     android:layout_height="match_parent"
     android:gravity="center"
     tools:context=".Lobby">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:id="@+id/LobbyCodeText"
+        android:textStyle="bold"
+        android:text="Lobby Code"/>
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="300dp"

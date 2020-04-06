@@ -42,7 +42,7 @@ public class DashboardActivity extends AppCompatActivity {
         createGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               generateLobby();
+              startActivity(new Intent(DashboardActivity.this,GameSelectionActivity.class));
             }
         });
         joinGame.setOnClickListener(new View.OnClickListener() {
@@ -53,33 +53,7 @@ public class DashboardActivity extends AppCompatActivity {
         });
     }
 
-    private void generateLobby() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Create Lobby");
-        final TextView textView = new TextView(this);
-        builder.setView(textView);
-        Random random = new Random(System.currentTimeMillis());
-        final int rnd = 100000+random.nextInt(500000);
-        textView.setText(""+rnd);
-        builder.setPositiveButton("Share", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(DashboardActivity.this,Lobby.class);
-                intent.putExtra("Activity","CreateGame");
-                intent.putExtra("LobbyCode",rnd);
-                createLobbyonServer(rnd);
-                startActivity(intent);
-            }
-        });
-        builder.show();
-    }
 
-    private void createLobbyonServer(int rnd) {
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference dbRef = firebaseDatabase.getReference().child("Lobbies").child(""+rnd);
-        dbRef.push().setValue(currentUser.getUid());
-        Toast.makeText(this, "Successful: "+dbRef.getDatabase().toString(), Toast.LENGTH_SHORT).show();
-    }
 
     private void joinLobby() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -108,7 +82,7 @@ public class DashboardActivity extends AppCompatActivity {
     private void joinLobbyonServer(String lobbyCode) {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference dbRef = firebaseDatabase.getReference().child("Lobbies").child(lobbyCode);
-        dbRef.push().setValue(currentUser.getUid());
+        dbRef.child("Players").push().setValue(currentUser.getUid());
         Toast.makeText(this, "Successful: "+dbRef.getDatabase().toString(), Toast.LENGTH_SHORT).show();
     }
 }
