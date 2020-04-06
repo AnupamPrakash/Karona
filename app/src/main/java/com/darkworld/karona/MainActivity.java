@@ -35,7 +35,7 @@ import java.io.Serializable;
 public class MainActivity extends AppCompatActivity {
 
     EditText email,password;
-    Button loginBtn;
+    Button loginBtn,newSignup;
     FirebaseAuth firebaseAuth;
     ProgressDialog progressdialog;
     SignInButton signInButton;
@@ -50,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         firebaseAuth= FirebaseAuth.getInstance();
         currentUser = firebaseAuth.getCurrentUser();
+        if(currentUser!=null)
+            startActivity(new Intent(MainActivity.this,DashboardActivity.class));
+        newSignup = findViewById(R.id.newAccount);
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
         loginBtn = findViewById(R.id.loginBtn);
@@ -78,6 +81,13 @@ public class MainActivity extends AppCompatActivity {
                 progressdialog.setMessage("Authenticating...");
                 progressdialog.show();
                 loginWithGoogle();
+            }
+        });
+        newSignup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,SignupActivity.class));
+                finish();
             }
         });
     }
@@ -114,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
     private void dbUserEntry(FirebaseUser user) {
         DatabaseReference mDatabase;
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());
-        getAlias();
+//        getAlias();
         customUser= new User(user.getDisplayName(),user.getUid(),user.getEmail(),alias,user.getPhotoUrl().toString());
         mDatabase.setValue(customUser);
     }

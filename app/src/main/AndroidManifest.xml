@@ -9,9 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ProfilePage"></activity>
+        <activity android:name=".SignupActivity"></activity>
+        <activity android:name=".ProfilePage" />
         <activity android:name=".GameSelectionActivity" />
-        <activity android:name=".Scoreboard"></activity>
+        <activity android:name=".Scoreboard" />
         <activity android:name=".SubmitLobby" />
         <activity android:name=".GameSelectionActivity" />
         <activity android:name=".GamePlayActivity" />
