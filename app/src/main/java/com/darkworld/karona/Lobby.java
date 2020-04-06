@@ -27,6 +27,7 @@ import org.w3c.dom.Text;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 
 public class Lobby extends AppCompatActivity {
@@ -36,97 +37,58 @@ public class Lobby extends AppCompatActivity {
     List<User> playersinLobby;
     int rounds;
     PlayerListAdapter playerListAdapter;
-//    ProgressDialog progressDialog;
+    ProgressDialog progressDialog;
     List<String> playerNames,gameQuestions;
-
+    String LobbyCode;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
         startGame = findViewById(R.id.start_game);
-        final String LobbyCode = getIntent().getStringExtra("LobbyCode");
+        LobbyCode = getIntent().getStringExtra("LobbyCode");
         playerList = findViewById(R.id.playerList);
         playersinLobby = new ArrayList<User>();
         playerNames = new ArrayList<String>();
+        progressDialog = new ProgressDialog(this);
+        rounds=5;
         TextView textView = findViewById(R.id.LobbyCodeText);
         textView.setText(LobbyCode);
-        String GameName = getIntent().getStringExtra("GameName");
+        final String GameName = getIntent().getStringExtra("GameName");
         gameQuestions = new ArrayList<String>();
         final String callingActivity = getIntent().getStringExtra("Activity");
 //        Toast.makeText(this, "Calling Activity: "+callingActivity, Toast.LENGTH_SHORT).show();
         if(callingActivity.equals("CreateGame"))
         {
             startGame.setVisibility(View.VISIBLE);
-            loadQuestions(GameName);
             Toast.makeText(this, "Questions: "+gameQuestions.size(), Toast.LENGTH_SHORT).show();
         }
         startGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatabaseReference dbRef2 = FirebaseDatabase.getInstance().getReference().child("Lobbies").child(LobbyCode).child("Start");
-                dbRef2.setValue("True");
-                Intent intent = new Intent(Lobby.this,GamePlayActivity.class);
-                intent.putExtra("Players", (Serializable) playerNames);
-                intent.putExtra("Questions", (Serializable) gameQuestions);
-                intent.putExtra("Rounds",5);
-                intent.putExtra("LobbyCode",LobbyCode);
-                intent.putExtra("Activity",callingActivity);
-                startActivity(intent);
-                Toast.makeText(Lobby.this, "Players: "+playerNames, Toast.LENGTH_SHORT).show();
-                Toast.makeText(Lobby.this, "Questions: "+gameQuestions.size(), Toast.LENGTH_SHORT).show();
+                DatabaseReference dbRef2 = FirebaseDatabase.getInstance().getReference().child("Lobbies").child(LobbyCode);
+                if(startGame.getText().equals("PREPARE GAME"))
+                {
+                     progressDialog.setMessage("Preparing Game...");
+                     progressDialog.show();
+                     loadQuestions(GameName);
+                    for(int i=0;i<playersinLobby.size();i++)
+                    {
+                        dbRef2.child("Scores").child(playersinLobby.get(i).getUserId()).setValue(0);
+                    }
+                }else {
+
+                    dbRef2.child("Start").setValue("True");
+                    Intent intent = new Intent(Lobby.this, GamePlayActivity.class);
+                    intent.putExtra("Rounds", 5);
+                    intent.putExtra("LobbyCode", LobbyCode);
+                    intent.putExtra("Activity", callingActivity);
+                    startActivity(intent);
+                    Toast.makeText(Lobby.this, "Players: " + playerNames, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Lobby.this, "Questions: " + gameQuestions.size(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
         getPlayers(LobbyCode);
-//        Toast.makeText(Lobby.this, "Ids"+playerNames, Toast.LENGTH_SHORT).show();
-//        playerList.setAdapter(new PlayerListAdapter(Lobby.this,playersinLobby));
-//        playerList.setLayoutManager(new GridLayoutManager(Lobby.this,4));
-//        Toast.makeText(Lobby.this, ""+playersinLobby, Toast.LENGTH_SHORT).show();
-//        Toast.makeText(this, "Ids"+playerNames, Toast.LENGTH_SHORT).show();
-//        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child("Lobbies").child(LobbyCode).child("Players");
-//        ChildEventListener childEventListener = new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//                DatabaseReference dbRef2 = FirebaseDatabase.getInstance().getReference().child("Users").child(dataSnapshot.getValue().toString());
-//                ValueEventListener valueEventListener = new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                        User user = dataSnapshot.getValue(User.class);
-//                        Toast.makeText(Lobby.this, "Name: "+user.getName(), Toast.LENGTH_SHORT).show();
-//                        playersinLobby.add(user);
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                    }
-//                };
-//                dbRef2.addListenerForSingleValueEvent(valueEventListener);
-//            }
-//
-//            @Override
-//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//            }
-//
-//            @Override
-//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        };
-//        dbRef.addChildEventListener(childEventListener);
-//        progressDialog = new ProgressDialog(this);
-//        progressDialog.setMessage("Loading Questions");
-//        progressDialog.show();
         playerListAdapter = new PlayerListAdapter(this,playersinLobby);
         playerList.setLayoutManager(new GridLayoutManager(this,2));
         if(callingActivity.equals("JoinGame")) {
@@ -139,6 +101,7 @@ public class Lobby extends AppCompatActivity {
 //                    intent.putExtra("Players", (Serializable) playerNames);
 //                    intent.putExtra("Questions", (Serializable) gameQuestions);
 //                    intent.putExtra("Rounds",rounds);
+                        intent.putExtra("LobbyCode",LobbyCode);
                         intent.putExtra("Activity", callingActivity);
                         startActivity(intent);
                     }
@@ -156,20 +119,31 @@ public class Lobby extends AppCompatActivity {
     private void getPlayers(String lobbyCode) {
 //        CountDownLatch done = new CountDownLatch(1);
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child("Lobbies").child(lobbyCode).child("Players");
-        dbRef.addValueEventListener(new ValueEventListener() {
+        dbRef.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
-                   loadPlayer(dataSnapshot1.getValue().toString());
-                }
-                Toast.makeText(Lobby.this, "Players: "+playersinLobby.size(), Toast.LENGTH_SHORT).show();
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                loadPlayer(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-
         });
     }
 
@@ -216,6 +190,7 @@ public class Lobby extends AppCompatActivity {
                 }
 //                progressDialog.dismiss();
 //                Toast.makeText(Lobby.this, ""+gameQuestions.size(), Toast.LENGTH_SHORT).show();
+                shuffle_and_upload_questions();
             }
 
             @Override
@@ -228,6 +203,30 @@ public class Lobby extends AppCompatActivity {
 //        } catch(InterruptedException e) {
 //            e.printStackTrace();
 //        }
+    }
+
+    private void shuffle_and_upload_questions() {
+        for(int i=0;i<rounds;i++) {
+//                Toast.makeText(this, "Round: "+i, Toast.LENGTH_SHORT).show();
+            Random random = new Random();
+            String caughtPlayer = playerNames.get(random.nextInt((playerNames.size())));
+            random = new Random();
+            String caughtQuestion = gameQuestions.get(random.nextInt(gameQuestions.size()));
+//                Toast.makeText(this, "PLayer:" + caughtPlayer + ",Question:" + caughtQuestion, Toast.LENGTH_SHORT).show();
+//                caughtQuestion.replace("{0}",caughtPlayer);
+            if(caughtQuestion.contains("{0}"))
+                Toast.makeText(this, "Found", Toast.LENGTH_SHORT).show();
+            caughtQuestion = caughtQuestion.replace("{0}",caughtPlayer);
+//                Toast.makeText(this, ""+caughtQuestion, Toast.LENGTH_SHORT).show();
+//                question.setText(caughtQuestion);
+            uploadQuestion(i,caughtQuestion);
+        }
+        startGame.setText("Start Game");
+        progressDialog.dismiss();
+    }
+    private void uploadQuestion(int count, String caughtQuestion) {
+        DatabaseReference dbRef2 = FirebaseDatabase.getInstance().getReference().child("Lobbies").child(LobbyCode).child("Questions");
+        dbRef2.push().setValue(caughtQuestion);
     }
 
 }

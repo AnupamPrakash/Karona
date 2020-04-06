@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -21,6 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -31,9 +34,12 @@ public class GamePlayActivity extends AppCompatActivity {
     int rounds;
     boolean isAdmin;
     EditText response;
-    TextView question,countdownTime;
+    TextView question,countdownTime,roundCounter;
     Timer timer;
     Button submit;
+    private static final long COUNTDOWN_IN_MILLIS = 15000;
+    private CountDownTimer countDownTimer;
+    private long timeLeftInMillis;
     User currentUser;
     String lobbyCode;
     int countdown=0,round=0;
@@ -42,11 +48,11 @@ public class GamePlayActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_play);
-        players = (List<String>) getIntent().getSerializableExtra("Players");
-        questions = (List<String>) getIntent().getSerializableExtra("Questions");
         rounds = getIntent().getIntExtra("Rounds",5);
         submit = findViewById(R.id.submitResponse);
+        roundCounter =  findViewById(R.id.roundCounter);
         countdownTime = findViewById(R.id.countdownTime);
+        question = findViewById(R.id.txtQuestion);
         roundQuestions = new ArrayList<String>();
         lobbyCode = getIntent().getStringExtra("LobbyCode");
         response = findViewById(R.id.response);
@@ -69,91 +75,125 @@ public class GamePlayActivity extends AppCompatActivity {
         else
             isAdmin=false;
         if(isAdmin) {
-//            Toast.makeText(this, "" + players.size() + questions.size(), Toast.LENGTH_SHORT).show();
-//            subbmit.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    i++;
-//                }
-//            });
-            ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage("Loading Game...");
-            progressDialog.show();
-            for(int i=0;i<rounds;i++) {
-                question = findViewById(R.id.txtQuestion);
-                question.setText("");
-//                Toast.makeText(this, "Round: "+i, Toast.LENGTH_SHORT).show();
-                Random random = new Random();
-                String caughtPlayer = players.get(random.nextInt((players.size())));
-                random = new Random();
-                String caughtQuestion = questions.get(random.nextInt(questions.size()));
-//                Toast.makeText(this, "PLayer:" + caughtPlayer + ",Question:" + caughtQuestion, Toast.LENGTH_SHORT).show();
-//                caughtQuestion.replace("{0}",caughtPlayer);
-                if(caughtQuestion.contains("{0}"))
-                    Toast.makeText(this, "Found", Toast.LENGTH_SHORT).show();
-                caughtQuestion = caughtQuestion.replace("{0}","Default");
-//                Toast.makeText(this, ""+caughtQuestion, Toast.LENGTH_SHORT).show();
-//                question.setText(caughtQuestion);
-                uploadQuestion(i,caughtQuestion);
-            }
-            progressDialog.dismiss();
+
         }
         loadQuestions(lobbyCode);
 //        startGame();
     }
 
     private void startGame() {
-        for(int i=0;i<10;i++) {
-//            String ques = roundQuestions.get(i);
-//             round=i;/
-//            question.setText(ques);
-//            new CountDownTimer(5000,1000){
-//
-//                @Override
-//                public void onTick(long millisUntilFinished) {
-////                    Toast.makeText(GamePlayActivity.this, "Timer: "+millisUntilFinished, Toast.LENGTH_SHORT).show();
-//                    submit.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            String resp = response.getText().toString();
-//                            if(resp.length()==0)
-//                                resp="No Comments";
-//                            DatabaseReference dbRef= FirebaseDatabase.getInstance().getReference().child("Lobbies").child(lobbyCode).child("Rounds");
-//                            dbRef.child("Round "+r).child("Responses").child(currentUser.getAlias()).setValue(resp);
-//                        }
-//                    });
-//                }
-//
-//                @Override
-//                public void onFinish() {
-//                    Toast.makeText(GamePlayActivity.this, "Time Up", Toast.LENGTH_SHORT).show();
-//                }
-//            }.start();
-//            countdown=0;
-            countdownTime.setText(""+i);
-            CountDownTimer countDownTimer = new CountDownTimer(5000,1000) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    countdown++;
-                }
+      showNextQuestion();
+      submit.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+              submitResponse();
+//              showNextQuestion();
+          }
+      });
+    }
 
-                @Override
-                public void onFinish() {
-                    countdownTime.setText(""+countdown);
-                }
-            }.start();
+    @Override
+    protected void onStart() {
+        super.onStart();
+        timeLeftInMillis=COUNTDOWN_IN_MILLIS;
+//        startGame();
+    }
+
+    private void submitResponse() {
+        countDownTimer.cancel();
+        String resp = response.getText().toString();
+        if(resp.length()==0)
+            resp="No Comments";
+        DatabaseReference dbRef2 = FirebaseDatabase.getInstance().getReference().child("Lobbies").child(lobbyCode).child("Rounds").child("Round "+round);
+        dbRef2.child("Question").setValue(question.getText().toString());
+        dbRef2.child("Responses").child(currentUser.getUserId()).setValue(resp);
+//        dbRef2.child("Responses").child(currentUser.getAlias()).child("UserDp").setValue(currentUser.getPhotoUrl());
+        Intent intent = new Intent(GamePlayActivity.this,SubmitLobby.class);
+        intent.putExtra("LobbyCode",lobbyCode);
+        intent.putExtra("Round","Round "+round);
+        intent.putExtra("User",currentUser);
+        intent.putExtra("Question",roundQuestions.get(round-1));
+        intent.putExtra("Response",resp);
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        countDownTimer.cancel();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        showNextQuestion();
+    }
+
+    private void showNextQuestion() {
+        if(round<rounds)
+        {
+            roundCounter.setText("Round "+(round+1));
+            String ques = roundQuestions.get(round);
+            question.setText(ques);
+            response.setText("");
+            timeLeftInMillis = COUNTDOWN_IN_MILLIS;
+            startCountDown();
         }
+        else
+        {
+            finishGame();
+        }
+        round++;
+    }
 
+    private void startCountDown() {
+
+        countDownTimer = new CountDownTimer(timeLeftInMillis, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timeLeftInMillis = millisUntilFinished;
+                updateCountDownText();
+            }
+
+            @Override
+            public void onFinish() {
+                timeLeftInMillis = 0;
+                countDownTimer.cancel();
+                updateCountDownText();
+                submitResponse();
+            }
+        }.start();
+    }
+
+    private void updateCountDownText() {
+        int minutes = (int) (timeLeftInMillis / 1000) / 60;
+        int seconds = (int) (timeLeftInMillis / 1000) % 60;
+
+        String timeFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+
+        countdownTime.setText(timeFormatted);
+
+        if (timeLeftInMillis < 5000) {
+            countdownTime.setTextColor(Color.RED);
+        } else {
+            countdownTime.setTextColor(Color.BLUE);
+        }
+    }
+
+    private void finishGame() {
+        Intent intent = new Intent(GamePlayActivity.this,Scoreboard.class);
+        intent.putExtra("LobbyCode",lobbyCode);
+        startActivity(intent);
     }
 
     private void loadQuestions(String lobbyCode) {
-        DatabaseReference dbRef2 = FirebaseDatabase.getInstance().getReference().child("Lobbies").child(lobbyCode).child("Rounds");
+        DatabaseReference dbRef2 = FirebaseDatabase.getInstance().getReference().child("Lobbies").child(lobbyCode).child("Questions");
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
                 for(DataSnapshot dataSnapshot1: dataSnapshot.getChildren())
                 {
-                   roundQuestions.add(dataSnapshot1.child("Question").getValue().toString());
+                   roundQuestions.add(dataSnapshot1.getValue().toString());
                 }
                 startGame();
             }
@@ -166,9 +206,4 @@ public class GamePlayActivity extends AppCompatActivity {
         dbRef2.addValueEventListener(valueEventListener);
     }
 
-
-    private void uploadQuestion(int count, String caughtQuestion) {
-        DatabaseReference dbRef2 = FirebaseDatabase.getInstance().getReference().child("Lobbies").child(lobbyCode).child("Rounds").child("Round "+count);
-        dbRef2.child("Question").setValue(caughtQuestion);
-    }
 }
