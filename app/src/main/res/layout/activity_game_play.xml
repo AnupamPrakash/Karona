@@ -24,6 +24,13 @@
                 android:background="@drawable/ic_question_box"
                 android:orientation="vertical"
                 android:padding="10dp">
+                <!--            profile pic-->
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_person_white_24dp" />
+                <!--            question-->
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -48,7 +55,7 @@
 
             <EditText
                 android:layout_width="match_parent"
-                android:layout_height="320dp"
+                android:layout_height="200dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/round_edit_text"
                 android:fontFamily="serif-monospace"
