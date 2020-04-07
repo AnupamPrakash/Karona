@@ -20,36 +20,55 @@
             <!--        question box-->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@drawable/ic_question_box"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:padding="10dp">
+<<<<<<< HEAD
                 <!--            profile pic-->
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:src="@drawable/ic_person_white_24dp" />
                 <!--            question-->
+=======
+>>>>>>> cf9c8fbba3d556a2a12a1bc3a21ba20b3c26ecf9
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:text="Round"
+                    android:gravity="center"
+                    android:id="@+id/roundCounter"
+                    android:textColor="@color/white"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="133dp"
                     android:fontFamily="serif-monospace"
+                    android:gravity="center"
+                    android:id="@+id/txtQuestion"
                     android:padding="10dp"
                     android:text="Hello"
                     android:textColor="#FFFFFF"
-                    android:textSize="24sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
             <EditText
                 android:layout_width="match_parent"
+<<<<<<< HEAD
                 android:layout_height="200dp"
+=======
+                android:layout_height="320dp"
+>>>>>>> cf9c8fbba3d556a2a12a1bc3a21ba20b3c26ecf9
                 android:layout_marginTop="10dp"
                 android:background="@drawable/round_edit_text"
                 android:fontFamily="serif-monospace"
                 android:hint="Enter your answer"
                 android:padding="10dp"
                 android:scrollbars="vertical"
+                android:id="@+id/response"
                 android:textAlignment="center"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -62,70 +81,74 @@
         android:orientation="vertical"
         android:layout_alignParentBottom="true">
 
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <!--eight player submitted their answer or not-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_person_black_24dp"
-                    android:layout_margin="10dp"/>
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_person_black_24dp"
-                    android:layout_margin="10dp"/>
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_person_black_24dp"
-                    android:layout_margin="10dp"/>
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_person_black_24dp"
-                    android:layout_margin="10dp"/>
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_person_black_24dp"
-                    android:layout_margin="10dp"/>
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_person_black_24dp"
-                    android:layout_margin="10dp"/>
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_person_black_24dp"
-                    android:layout_margin="10dp"/>
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_person_black_24dp"
-                    android:layout_margin="10dp"/>
-            </LinearLayout>
+<!--        <HorizontalScrollView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content">-->
+<!--            &lt;!&ndash;eight player submitted their answer or not&ndash;&gt;-->
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:orientation="horizontal">-->
+<!--                <ImageView-->
+<!--                    android:layout_width="50dp"-->
+<!--                    android:layout_height="50dp"-->
+<!--                    android:src="@drawable/ic_person_black_24dp"-->
+<!--                    android:layout_margin="10dp"/>-->
+<!--                <ImageView-->
+<!--                    android:layout_width="50dp"-->
+<!--                    android:layout_height="50dp"-->
+<!--                    android:src="@drawable/ic_person_black_24dp"-->
+<!--                    android:layout_margin="10dp"/>-->
+<!--                <ImageView-->
+<!--                    android:layout_width="50dp"-->
+<!--                    android:layout_height="50dp"-->
+<!--                    android:src="@drawable/ic_person_black_24dp"-->
+<!--                    android:layout_margin="10dp"/>-->
+<!--                <ImageView-->
+<!--                    android:layout_width="50dp"-->
+<!--                    android:layout_height="50dp"-->
+<!--                    android:src="@drawable/ic_person_black_24dp"-->
+<!--                    android:layout_margin="10dp"/>-->
+<!--                <ImageView-->
+<!--                    android:layout_width="50dp"-->
+<!--                    android:layout_height="50dp"-->
+<!--                    android:src="@drawable/ic_person_black_24dp"-->
+<!--                    android:layout_margin="10dp"/>-->
+<!--                <ImageView-->
+<!--                    android:layout_width="50dp"-->
+<!--                    android:layout_height="50dp"-->
+<!--                    android:src="@drawable/ic_person_black_24dp"-->
+<!--                    android:layout_margin="10dp"/>-->
+<!--                <ImageView-->
+<!--                    android:layout_width="50dp"-->
+<!--                    android:layout_height="50dp"-->
+<!--                    android:src="@drawable/ic_person_black_24dp"-->
+<!--                    android:layout_margin="10dp"/>-->
+<!--                <ImageView-->
+<!--                    android:layout_width="50dp"-->
+<!--                    android:layout_height="50dp"-->
+<!--                    android:src="@drawable/ic_person_black_24dp"-->
+<!--                    android:layout_margin="10dp"/>-->
+<!--            </LinearLayout>-->
 
-        </HorizontalScrollView>
+<!--        </HorizontalScrollView>-->
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal" >
             <!--close (quit) button-->
-            <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@drawable/close_button"
-                android:src="@drawable/ic_close_black_24dp"
-                android:padding="10dp"
-                android:layout_margin="10dp"/>
+           <TextView
+               android:layout_width="100dp"
+               android:layout_height="match_parent"
+               android:layout_marginHorizontal="15dp"
+               android:gravity="center"
+               android:textSize="20dp"
+               android:text="Timer"
+               android:textStyle="bold"
+               android:layout_marginVertical="10dp"
+               android:background="@color/white"
+               android:id="@+id/countdownTime"/>
             <!--submit button-->
             <Button
                 android:layout_width="match_parent"
@@ -133,6 +156,7 @@
                 android:text="Submit"
                 android:fontFamily="serif-monospace"
                 android:textColor="#FFFFFF"
+                android:id="@+id/submitResponse"
                 android:textSize="24dp"
                 android:background="@drawable/round_button"
                 android:layout_margin="10dp"
