@@ -15,16 +15,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/cardLogo"
-        android:background="@drawable/background2"
+        android:background="@drawable/background"
         android:gravity="center">
+
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/gameName"
+            android:layout_width="271dp"
+            android:layout_height="58dp"
 
             android:text="What they know?"
-            android:textSize="32sp"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white"
+            android:textSize="32sp" />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

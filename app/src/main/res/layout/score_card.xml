@@ -29,6 +29,7 @@
              android:gravity="center"
              android:text="Alias"
              android:textSize="20dp"
+             android:autoSizeTextType="uniform"
              android:textStyle="bold" />
          <TextView
              android:layout_width="0dp"

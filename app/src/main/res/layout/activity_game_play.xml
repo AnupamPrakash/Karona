@@ -6,6 +6,7 @@
     tools:context=".GamePlayActivity"
     android:background="@drawable/background2">
 
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -152,6 +153,7 @@
                 android:textColor="#FFFFFF"
                 android:id="@+id/submitResponse"
                 android:textSize="24dp"
+                android:autoSizeTextType="uniform"
                 android:background="@drawable/btn"
                 android:layout_margin="10dp"
                 android:padding="10dp"/>
