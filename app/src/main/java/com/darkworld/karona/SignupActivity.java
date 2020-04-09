@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -52,14 +53,34 @@ public class SignupActivity extends AppCompatActivity {
                 name = register_name.getText().toString();
                 email = register_email.getText().toString();
                 password = register_password.getText().toString();
-                progressdialog = new ProgressDialog(SignupActivity.this);
-                progressdialog.setMessage("Registering...");
-                progressdialog.show();
-                registerUser(name, email, password);
+                if(name.length()==0)
+                {
+                    Toast.makeText(SignupActivity.this, "UserAlias cannot be empty", Toast.LENGTH_SHORT).show();
+                }
+                else if(email.length()==0){
+                    Toast.makeText(SignupActivity.this, "Email cannot be empty", Toast.LENGTH_SHORT).show();
+                }
+                else if(!isEmailValid(email))
+                {
+                    Toast.makeText(SignupActivity.this, "Enter valid EmailId", Toast.LENGTH_SHORT).show();
+                }
+                else if(password.length()<6)
+                {
+                    Toast.makeText(SignupActivity.this, "Enter password of more than 6 characters", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    progressdialog = new ProgressDialog(SignupActivity.this);
+                    progressdialog.setMessage("Registering...");
+                    progressdialog.show();
+                    registerUser(name, email, password);
+                }
             }
         });
     }
-
+    boolean isEmailValid(CharSequence email)
+    {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
     private void registerUser(final String name, String email, String password) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -72,7 +93,7 @@ public class SignupActivity extends AppCompatActivity {
                             Toast.makeText(SignupActivity.this, "Successfully registered ", Toast.LENGTH_SHORT).show();
                             dbUserEntry(name, user);
                             progressdialog.dismiss();
-                            startActivity(new Intent(SignupActivity.this, MainActivity.class));
+                            startActivity(new Intent(SignupActivity.this, DashboardActivity.class));
                             finish();
 //                            updateUI(user);
                         } else {

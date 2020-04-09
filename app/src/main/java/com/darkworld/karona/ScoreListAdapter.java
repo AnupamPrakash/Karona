@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,14 +32,15 @@ public class ScoreListAdapter extends RecyclerView.Adapter<ScoreListAdapter.Scor
     @Override
     public ScoreViewHelper onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater= LayoutInflater.from(parent.getContext());
-        View view=inflater.inflate(R.layout.submit_card,parent,false);
+        View view=inflater.inflate(R.layout.score_card,parent,false);
         return new ScoreViewHelper(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ScoreViewHelper holder, int position) {
+        Toast.makeText(context, "PlayerScore:"+players.get(position).getAlias()+"="+scores.get(position).toString(), Toast.LENGTH_SHORT).show();
         holder.userScore.setText(""+scores.get(position));
-        holder.userAlias.setText(""+players.get(position));
+        holder.userAlias.setText(""+players.get(position).getAlias());
         Glide.with(context).load(Uri.parse(players.get(position).getPhotoUrl())).into(holder.userDp);
     }
 

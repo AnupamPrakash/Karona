@@ -32,14 +32,14 @@ import java.util.concurrent.CountDownLatch;
 
 public class Lobby extends AppCompatActivity {
 
-    Button startGame;
+    Button startGame,shareCode;
     RecyclerView playerList;
     List<User> playersinLobby;
     int rounds;
     PlayerListAdapter playerListAdapter;
     ProgressDialog progressDialog;
     List<String> playerNames,gameQuestions;
-    String LobbyCode;
+    String LobbyCode,GameName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,18 +49,29 @@ public class Lobby extends AppCompatActivity {
         playerList = findViewById(R.id.playerList);
         playersinLobby = new ArrayList<User>();
         playerNames = new ArrayList<String>();
+        shareCode = findViewById(R.id.shareCode);
         progressDialog = new ProgressDialog(this);
-        rounds=5;
+        rounds=10;
         TextView textView = findViewById(R.id.LobbyCodeText);
         textView.setText(LobbyCode);
-        final String GameName = getIntent().getStringExtra("GameName");
+        GameName = getIntent().getStringExtra("GameName");
         gameQuestions = new ArrayList<String>();
         final String callingActivity = getIntent().getStringExtra("Activity");
 //        Toast.makeText(this, "Calling Activity: "+callingActivity, Toast.LENGTH_SHORT).show();
+        shareCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT,"Let's get started.Join Lobby on Karona with the Secret LobbyCode: "+LobbyCode);
+                startActivity(Intent.createChooser(intent,"Share Lobby Code via"));
+//
+            }
+        });
         if(callingActivity.equals("CreateGame"))
         {
             startGame.setVisibility(View.VISIBLE);
-            Toast.makeText(this, "Questions: "+gameQuestions.size(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Questions: "+gameQuestions.size(), Toast.LENGTH_SHORT).show();
         }
         startGame.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,16 +86,18 @@ public class Lobby extends AppCompatActivity {
                     {
                         dbRef2.child("Scores").child(playersinLobby.get(i).getUserId()).setValue(0);
                     }
+//                    Toast.makeText(Lobby.this, "Questions: "+dbRef2.child("Questions").toString(), Toast.LENGTH_SHORT).show();
                 }else {
 
                     dbRef2.child("Start").setValue("True");
                     Intent intent = new Intent(Lobby.this, GamePlayActivity.class);
-                    intent.putExtra("Rounds", 5);
+                    intent.putExtra("Rounds", 10);
                     intent.putExtra("LobbyCode", LobbyCode);
-                    intent.putExtra("Activity", callingActivity);
+                    intent.putExtra("GameName",GameName);
+                    intent.putExtra("Activity", "Lobby");
                     startActivity(intent);
-                    Toast.makeText(Lobby.this, "Players: " + playerNames, Toast.LENGTH_SHORT).show();
-                    Toast.makeText(Lobby.this, "Questions: " + gameQuestions.size(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(Lobby.this, "Players: " + playerNames, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(Lobby.this, "Questions: " + gameQuestions.size(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -101,6 +114,7 @@ public class Lobby extends AppCompatActivity {
 //                    intent.putExtra("Players", (Serializable) playerNames);
 //                    intent.putExtra("Questions", (Serializable) gameQuestions);
 //                    intent.putExtra("Rounds",rounds);
+                        intent.putExtra("PlayersCount",playersinLobby.size());
                         intent.putExtra("LobbyCode",LobbyCode);
                         intent.putExtra("Activity", callingActivity);
                         startActivity(intent);
@@ -160,7 +174,7 @@ public class Lobby extends AppCompatActivity {
 //                Toast.makeText(Lobby.this, ""+user, Toast.LENGTH_SHORT).show();
                 playerListAdapter.notifyItemInserted(playersinLobby.size()-1);
                 playerList.setAdapter(playerListAdapter);
-                Toast.makeText(Lobby.this, ""+playersinLobby.get(playersinLobby.size()-1).getAlias(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(Lobby.this, ""+playersinLobby.get(playersinLobby.size()-1).getAlias(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -177,7 +191,7 @@ public class Lobby extends AppCompatActivity {
     }
 
     private void loadQuestions(String gameName) {
-        Toast.makeText(this, ""+gameName, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, ""+gameName, Toast.LENGTH_SHORT).show();
 //        CountDownLatch done = new CountDownLatch(1);
         DatabaseReference quesRef = FirebaseDatabase.getInstance().getReference().child(gameName);
         quesRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -215,7 +229,7 @@ public class Lobby extends AppCompatActivity {
 //                Toast.makeText(this, "PLayer:" + caughtPlayer + ",Question:" + caughtQuestion, Toast.LENGTH_SHORT).show();
 //                caughtQuestion.replace("{0}",caughtPlayer);
             if(caughtQuestion.contains("{0}"))
-                Toast.makeText(this, "Found", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Found", Toast.LENGTH_SHORT).show();
             caughtQuestion = caughtQuestion.replace("{0}",caughtPlayer);
 //                Toast.makeText(this, ""+caughtQuestion, Toast.LENGTH_SHORT).show();
 //                question.setText(caughtQuestion);

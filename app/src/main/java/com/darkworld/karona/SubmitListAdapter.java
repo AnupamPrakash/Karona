@@ -1,5 +1,6 @@
 package com.darkworld.karona;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -8,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,12 +28,17 @@ public class SubmitListAdapter extends RecyclerView.Adapter<SubmitListAdapter.Su
     List<String> responses;
     List<Long> scores;
     String lobbyCode;
-    public SubmitListAdapter(Context context, List<User> players, List<String> responses, List<Long> scores,String lobbyCode) {
+    int playersCount;
+    DatabaseReference databaseReference;
+
+    public SubmitListAdapter(Context context, List<User> players, List<String> responses, List<Long> scores, String lobbyCode, int playersCount) {
         this.context = context;
         this.players = players;
         this.responses = responses;
         this.scores = scores;
         this.lobbyCode = lobbyCode;
+        this.playersCount = playersCount;
+        databaseReference = FirebaseDatabase.getInstance().getReference();
     }
 
     @NonNull
@@ -41,20 +49,28 @@ public class SubmitListAdapter extends RecyclerView.Adapter<SubmitListAdapter.Su
         return new SubmitListView(view);
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull SubmitListView holder, final int position) {
+        if(players.size()>0) {
+            holder.response.setClickable(true);
+            holder.layout.setBackgroundColor(R.color.white);
+        }
         final User player = players.get(position);
         String response = responses.get(position);
         holder.response.setText(response);
-        holder.userAlias.setText(player.getAlias());
-        Glide.with(context).load(Uri.parse(player.getPhotoUrl())).into(holder.userDp);
-        holder.vote.setOnClickListener(new View.OnClickListener() {
+        holder.response.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                long score = scores.get(position);
-                score+=4;
-                Intent intent = new Intent(context,GamePlayActivity.class);
-
+                Toast.makeText(context, "You selected "+player.getAlias()+"'s answer", Toast.LENGTH_SHORT).show();
+//                Intent intent = new Intent(context,GamePlayActivity.class);
+//                intent.putExtra("LobbyCode",lobbyCode);
+//                intent.putExtra("Activity","SubmitLobby");
+//                intent.putExtra("User",player);
+//                context.startActivity(intent);
+//                context.
+                databaseReference.child("Lobbies").child(lobbyCode).child("Scores").child(player.getUserId()).setValue(scores.get(position)+4);
+                ((SubmitLobby)context).onBackPressed();
             }
         });
     }
@@ -67,15 +83,12 @@ public class SubmitListAdapter extends RecyclerView.Adapter<SubmitListAdapter.Su
 
     public class SubmitListView extends RecyclerView.ViewHolder{
 
-        TextView userAlias,response;
-        ImageView userDp;
-        Button vote;
+        TextView response;
+        LinearLayout layout;
         public SubmitListView(@NonNull View itemView) {
             super(itemView);
-            userAlias = itemView.findViewById(R.id.userAlias);
             response = itemView.findViewById(R.id.userResponse);
-            userDp = itemView.findViewById(R.id.userDp);
-            vote = itemView.findViewById(R.id.vote);
+            layout = itemView.findViewById(R.id.layout);
         }
     }
 }

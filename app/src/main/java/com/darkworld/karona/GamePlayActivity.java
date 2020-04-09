@@ -37,24 +37,38 @@ public class GamePlayActivity extends AppCompatActivity {
     TextView question,countdownTime,roundCounter;
     Timer timer;
     Button submit;
-    private static final long COUNTDOWN_IN_MILLIS = 15000;
+    private static final long COUNTDOWN_IN_MILLIS = 30000;
     private CountDownTimer countDownTimer;
     private long timeLeftInMillis;
     User currentUser;
-    String lobbyCode;
-    int countdown=0,round=0;
+    long score;
+    String lobbyCode,callingActivity,gameName;
+    int countPlayers=0,round=0;
 //    int i;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_play);
-        rounds = getIntent().getIntExtra("Rounds",5);
+        rounds=10;
+        callingActivity = getIntent().getStringExtra("Activity");
+        if(callingActivity.equals("Lobby")) {
+            lobbyCode = getIntent().getStringExtra("LobbyCode");
+            countPlayers = getIntent().getIntExtra("PlayersCount", 5);
+//            rounds = getIntent().getIntExtra("Rounds", 5);
+            gameName = getIntent().getStringExtra("GameName");
+            loadQuestions(lobbyCode);
+        }
+        else if(callingActivity.equals("SubmitLobby")) {
+            User player = (User) getIntent().getSerializableExtra("User");
+            lobbyCode = getIntent().getStringExtra("LobbyCode");
+//            loadScore(player.getUserId());
+//            updateScore(player.getUserId());
+        }
         submit = findViewById(R.id.submitResponse);
         roundCounter =  findViewById(R.id.roundCounter);
         countdownTime = findViewById(R.id.countdownTime);
         question = findViewById(R.id.txtQuestion);
         roundQuestions = new ArrayList<String>();
-        lobbyCode = getIntent().getStringExtra("LobbyCode");
         response = findViewById(R.id.response);
 //        i=0;
         DatabaseReference dbRef= FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -70,15 +84,11 @@ public class GamePlayActivity extends AppCompatActivity {
 
             }
         });
-        if(getIntent().getStringExtra("Activity").equals("CreateGame"))
-            isAdmin=true;
-        else
-            isAdmin=false;
-        if(isAdmin) {
+    }
 
-        }
-        loadQuestions(lobbyCode);
-//        startGame();
+    private void updateScore(String userId) {
+        DatabaseReference dbRef= FirebaseDatabase.getInstance().getReference().child("Lobbies").child(lobbyCode).child("Scores").child(userId);
+        dbRef.setValue(score+4);
     }
 
     private void startGame() {
@@ -112,6 +122,7 @@ public class GamePlayActivity extends AppCompatActivity {
         intent.putExtra("LobbyCode",lobbyCode);
         intent.putExtra("Round","Round "+round);
         intent.putExtra("User",currentUser);
+        intent.putExtra("PlayersCount",countPlayers);
         intent.putExtra("Question",roundQuestions.get(round-1));
         intent.putExtra("Response",resp);
         startActivity(intent);
@@ -120,12 +131,13 @@ public class GamePlayActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        countDownTimer.cancel();
+//        countDownTimer.cancel();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
+//        Toast.makeText(this, "Round "+round+", Out of "+rounds, Toast.LENGTH_SHORT).show();
         showNextQuestion();
     }
 
@@ -183,6 +195,7 @@ public class GamePlayActivity extends AppCompatActivity {
     private void finishGame() {
         Intent intent = new Intent(GamePlayActivity.this,Scoreboard.class);
         intent.putExtra("LobbyCode",lobbyCode);
+        intent.putExtra("GameName",gameName);
         startActivity(intent);
     }
 
@@ -206,4 +219,9 @@ public class GamePlayActivity extends AppCompatActivity {
         dbRef2.addValueEventListener(valueEventListener);
     }
 
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        Toast.makeText(this, "Can't exit game during play", Toast.LENGTH_SHORT).show();
+    }
 }

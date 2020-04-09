@@ -8,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -68,10 +69,16 @@ public class MainActivity extends AppCompatActivity {
                 String strEmail,strPassword;
                 strEmail = email.getText().toString();
                 strPassword = password.getText().toString();
-                progressdialog = new ProgressDialog(MainActivity.this);
-                progressdialog.setMessage("Authenticating...");
-                progressdialog.show();
-                loginEmailPassword(strEmail,strPassword);
+                if(strEmail.length()==0 || strPassword.length()<6 || !isEmailValid(strEmail))
+                {
+                    Toast.makeText(MainActivity.this, "Enter Correct Credentials", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    progressdialog = new ProgressDialog(MainActivity.this);
+                    progressdialog.setMessage("Authenticating...");
+                    progressdialog.show();
+                    loginEmailPassword(strEmail, strPassword);
+                }
             }
         });
         signInButton.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +98,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
+    boolean isEmailValid(CharSequence email)
+    {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
     private void loginEmailPassword(String strEmail, String strPassword) {
         firebaseAuth.signInWithEmailAndPassword(strEmail, strPassword)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {

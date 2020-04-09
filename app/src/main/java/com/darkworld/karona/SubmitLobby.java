@@ -6,10 +6,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.net.Uri;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,12 +29,15 @@ public class SubmitLobby extends AppCompatActivity {
 
     String lobbyCode,round,ownResponse,currQuestion;
     User currentUser;
-    TextView roundQuestion,roundResponse;
+    TextView roundQuestion,roundResponse,playersCounter;
     RecyclerView submitList;
+    ImageView userDP;
     List<String> responses;
     SubmitListAdapter submitListAdapter;
     List<User> players;
     List<Long> scores;
+    int playersCount;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,27 +48,30 @@ public class SubmitLobby extends AppCompatActivity {
         currQuestion = getIntent().getStringExtra("Question");
         ownResponse = getIntent().getStringExtra("Response");
         roundQuestion = findViewById(R.id.roundQuestion);
+        userDP= findViewById(R.id.submitUserDp);
         roundResponse = findViewById(R.id.roundResponse);
+        playersCounter = findViewById(R.id.players);
         submitList = findViewById(R.id.submitList);
         roundQuestion.setText(currQuestion);
         roundResponse.setText(ownResponse);
+        playersCount = getIntent().getIntExtra("PlayersCount",5);
         responses = new ArrayList<String>();
         players = new ArrayList<User>();
         scores = new ArrayList<Long>();
-        submitListAdapter = new SubmitListAdapter(this,players,responses,scores,lobbyCode);
-        submitList.setAdapter(submitListAdapter);
         submitList.setLayoutManager(new LinearLayoutManager(this));
+        submitListAdapter = new SubmitListAdapter(SubmitLobby.this,players,responses, scores, lobbyCode,playersCount);
         DatabaseReference dbRef= FirebaseDatabase.getInstance().getReference().child("Lobbies").child(lobbyCode).child("Rounds").child(round).child("Responses");
         dbRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 responses.add(dataSnapshot.getValue().toString());
-                if(!dataSnapshot.getKey().equals(currentUser.getUserId()))
+//                if(dataSnapshot.getKey().equals(currentUser.getUserId())==false)
                     loadPlayer(dataSnapshot.getKey());
-                Toast.makeText(SubmitLobby.this, ""+dataSnapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
+                    loadScore(dataSnapshot.getKey());
+                playersCounter.setText(""+players.size());
+//                Toast.makeText(SubmitLobby.this, ""+dataSnapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
                 submitListAdapter.notifyItemInserted(responses.size()-1);
                 submitList.setAdapter(submitListAdapter);
-                loadScore(dataSnapshot.getKey());
             }
 
             @Override
@@ -87,7 +96,6 @@ public class SubmitLobby extends AppCompatActivity {
         });
 
     }
-
     private void loadScore(String uid) {
         DatabaseReference dbRef= FirebaseDatabase.getInstance().getReference().child("Lobbies").child(lobbyCode).child("Scores").child(uid);
         dbRef.addValueEventListener(new ValueEventListener() {
@@ -102,7 +110,6 @@ public class SubmitLobby extends AppCompatActivity {
             }
         });
     }
-
     private void loadPlayer(String uid) {
         DatabaseReference dbRef= FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
         dbRef.addValueEventListener(new ValueEventListener() {
@@ -110,6 +117,7 @@ public class SubmitLobby extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 players.add(user);
+                Glide.with(SubmitLobby.this).load(Uri.parse(user.getPhotoUrl())).into(userDP);
             }
 
             @Override
@@ -118,10 +126,5 @@ public class SubmitLobby extends AppCompatActivity {
             }
         });
 
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 }
