@@ -8,7 +8,8 @@
     android:background="@color/cardview_shadow_start_color"
     android:orientation="vertical"
     android:layout_height="match_parent"
-    tools:context=".SubmitLobby">
+    tools:context=".SubmitLobby"
+    android:background="@drawable/background2">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

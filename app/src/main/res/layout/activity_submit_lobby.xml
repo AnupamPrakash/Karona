@@ -7,6 +7,8 @@
     android:padding="25dp"
     android:orientation="vertical"
     android:layout_height="match_parent"
+    tools:context=".SubmitLobby"
+    android:background="@drawable/background2">
     tools:context=".SubmitLobby">
     <ImageView
         android:layout_width="80dp"

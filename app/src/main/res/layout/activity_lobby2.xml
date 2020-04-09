@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:background="@drawable/background">
+        android:background="@drawable/background2">
 
 
         <androidx.recyclerview.widget.RecyclerView
