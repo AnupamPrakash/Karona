@@ -28,7 +28,7 @@ import java.util.concurrent.CountDownLatch;
 
 public class DashboardActivity extends AppCompatActivity {
 
-    ImageView createGame,joinGame;
+    ImageView createGame,joinGame,profile;
     FirebaseAuth firebaseAuth;
     boolean lobbyExists;
     FirebaseUser currentUser;
@@ -40,6 +40,13 @@ public class DashboardActivity extends AppCompatActivity {
         createGame = findViewById(R.id.create_game);
         lobbyExists=true;
         joinGame = findViewById(R.id.join_game);
+        profile = findViewById(R.id.profile);
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(DashboardActivity.this,ProfilePage.class));
+            }
+        });
         firebaseAuth = FirebaseAuth.getInstance();
 //        user = (User) getIntent().getSerializableExtra("User");
         currentUser = firebaseAuth.getCurrentUser();

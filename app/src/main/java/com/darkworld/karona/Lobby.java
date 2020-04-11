@@ -1,11 +1,9 @@
 package com.darkworld.karona;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,16 +12,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import org.w3c.dom.Text;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,9 +46,11 @@ public class Lobby extends AppCompatActivity {
         playerNames = new ArrayList<String>();
         shareCode = findViewById(R.id.shareCode);
         progressDialog = new ProgressDialog(this);
+        rounds=5;
         rounds=10;
         TextView textView = findViewById(R.id.LobbyCodeText);
         textView.setText(LobbyCode);
+//        GameName = getIntent().getStringExtra("GameName");
         GameName = getIntent().getStringExtra("GameName");
         gameQuestions = new ArrayList<String>();
         final String callingActivity = getIntent().getStringExtra("Activity");
@@ -71,6 +68,7 @@ public class Lobby extends AppCompatActivity {
         if(callingActivity.equals("CreateGame"))
         {
             startGame.setVisibility(View.VISIBLE);
+            Toast.makeText(this, "Questions: "+gameQuestions.size(), Toast.LENGTH_SHORT).show();
 //            Toast.makeText(this, "Questions: "+gameQuestions.size(), Toast.LENGTH_SHORT).show();
         }
         startGame.setOnClickListener(new View.OnClickListener() {
@@ -79,9 +77,9 @@ public class Lobby extends AppCompatActivity {
                 DatabaseReference dbRef2 = FirebaseDatabase.getInstance().getReference().child("Lobbies").child(LobbyCode);
                 if(startGame.getText().equals("PREPARE GAME"))
                 {
-                     progressDialog.setMessage("Preparing Game...");
-                     progressDialog.show();
-                     loadQuestions(GameName);
+                    progressDialog.setMessage("Preparing Game...");
+                    progressDialog.show();
+                    loadQuestions(GameName);
                     for(int i=0;i<playersinLobby.size();i++)
                     {
                         dbRef2.child("Scores").child(playersinLobby.get(i).getUserId()).setValue(0);
@@ -91,11 +89,15 @@ public class Lobby extends AppCompatActivity {
 
                     dbRef2.child("Start").setValue("True");
                     Intent intent = new Intent(Lobby.this, GamePlayActivity.class);
+                    intent.putExtra("Rounds", 5);
                     intent.putExtra("Rounds", 10);
                     intent.putExtra("LobbyCode", LobbyCode);
+                    intent.putExtra("Activity", callingActivity);
                     intent.putExtra("GameName",GameName);
                     intent.putExtra("Activity", "Lobby");
                     startActivity(intent);
+                    Toast.makeText(Lobby.this, "Players: " + playerNames, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Lobby.this, "Questions: " + gameQuestions.size(), Toast.LENGTH_SHORT).show();
 //                    Toast.makeText(Lobby.this, "Players: " + playerNames, Toast.LENGTH_SHORT).show();
 //                    Toast.makeText(Lobby.this, "Questions: " + gameQuestions.size(), Toast.LENGTH_SHORT).show();
                 }
@@ -104,6 +106,7 @@ public class Lobby extends AppCompatActivity {
         getPlayers(LobbyCode);
         playerListAdapter = new PlayerListAdapter(this,playersinLobby);
         playerList.setLayoutManager(new GridLayoutManager(this,2));
+        playerList.setAdapter(playerListAdapter);
         if(callingActivity.equals("JoinGame")) {
             DatabaseReference dbRef2 = FirebaseDatabase.getInstance().getReference().child("Lobbies").child(LobbyCode).child("Start");
             dbRef2.addValueEventListener(new ValueEventListener() {
@@ -120,16 +123,12 @@ public class Lobby extends AppCompatActivity {
                         startActivity(intent);
                     }
                 }
-
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
                 }
-
             });
         }
     }
-
     private void getPlayers(String lobbyCode) {
 //        CountDownLatch done = new CountDownLatch(1);
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child("Lobbies").child(lobbyCode).child("Players");
@@ -137,30 +136,23 @@ public class Lobby extends AppCompatActivity {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 loadPlayer(dataSnapshot.getValue().toString());
+                playerListAdapter.notifyItemInserted(playersinLobby.size()-1);
+                playerList.setAdapter(playerListAdapter);
             }
-
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
             }
-
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
             }
-
             @Override
             public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
     }
-
     private void loadPlayer(String uid) {
 //        CountDownLatch done = new CountDownLatch(1);
         DatabaseReference dbRef= FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
@@ -174,12 +166,12 @@ public class Lobby extends AppCompatActivity {
 //                Toast.makeText(Lobby.this, ""+user, Toast.LENGTH_SHORT).show();
                 playerListAdapter.notifyItemInserted(playersinLobby.size()-1);
                 playerList.setAdapter(playerListAdapter);
+                Toast.makeText(Lobby.this, ""+playersinLobby.get(playersinLobby.size()-1).getAlias(), Toast.LENGTH_SHORT).show();
 //                Toast.makeText(Lobby.this, ""+playersinLobby.get(playersinLobby.size()-1).getAlias(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
 //        try {
@@ -187,10 +179,10 @@ public class Lobby extends AppCompatActivity {
 //        } catch(InterruptedException e) {
 //            e.printStackTrace();
 //        }
-
     }
 
     private void loadQuestions(String gameName) {
+        Toast.makeText(this, ""+gameName, Toast.LENGTH_SHORT).show();
 //        Toast.makeText(this, ""+gameName, Toast.LENGTH_SHORT).show();
 //        CountDownLatch done = new CountDownLatch(1);
         DatabaseReference quesRef = FirebaseDatabase.getInstance().getReference().child(gameName);
@@ -206,10 +198,8 @@ public class Lobby extends AppCompatActivity {
 //                Toast.makeText(Lobby.this, ""+gameQuestions.size(), Toast.LENGTH_SHORT).show();
                 shuffle_and_upload_questions();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
 //        try {
@@ -218,7 +208,6 @@ public class Lobby extends AppCompatActivity {
 //            e.printStackTrace();
 //        }
     }
-
     private void shuffle_and_upload_questions() {
         for(int i=0;i<rounds;i++) {
 //                Toast.makeText(this, "Round: "+i, Toast.LENGTH_SHORT).show();
@@ -228,7 +217,8 @@ public class Lobby extends AppCompatActivity {
             String caughtQuestion = gameQuestions.get(random.nextInt(gameQuestions.size()));
 //                Toast.makeText(this, "PLayer:" + caughtPlayer + ",Question:" + caughtQuestion, Toast.LENGTH_SHORT).show();
 //                caughtQuestion.replace("{0}",caughtPlayer);
-            if(caughtQuestion.contains("{0}"))
+//            if(caughtQuestion.contains("{0}"))
+//                Toast.makeText(this, "Found", Toast.LENGTH_SHORT).show();
 //                Toast.makeText(this, "Found", Toast.LENGTH_SHORT).show();
             caughtQuestion = caughtQuestion.replace("{0}",caughtPlayer);
 //                Toast.makeText(this, ""+caughtQuestion, Toast.LENGTH_SHORT).show();
@@ -242,5 +232,4 @@ public class Lobby extends AppCompatActivity {
         DatabaseReference dbRef2 = FirebaseDatabase.getInstance().getReference().child("Lobbies").child(LobbyCode).child("Questions");
         dbRef2.push().setValue(caughtQuestion);
     }
-
 }

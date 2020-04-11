@@ -2,6 +2,7 @@ package com.darkworld.karona;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Pl
     public PlayerListAdapter.PlayerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater=LayoutInflater.from(parent.getContext());
         View view=inflater.inflate(R.layout.player_item_card,parent,false);
-        return new PlayerViewHolder(view);
+        return new PlayerListAdapter.PlayerViewHolder(view);
     }
 
     @Override
@@ -34,6 +35,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Pl
         User player = players.get(position);
         holder.userAlias.setText(player.getAlias());
         Glide.with(context).load(Uri.parse(player.getPhotoUrl())).into(holder.userDp);
+        Log.d("PlayerListSize",""+players.size());
     }
 
     @Override

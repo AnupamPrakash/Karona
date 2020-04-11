@@ -17,46 +17,42 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 
-public class ScoreListAdapter extends RecyclerView.Adapter<ScoreListAdapter.ScoreViewHelper> {
+public class ProfileScoreListAdapter extends RecyclerView.Adapter<ProfileScoreListAdapter.ScoreViewHelper> {
     Context context;
     List<Long> scores;
-    List<User> players;
+    List<String> games;
 
-    public ScoreListAdapter(Context context, List<Long> scores, List<User> players) {
+    public ProfileScoreListAdapter(Context context, List<Long> scores, List<String> games) {
         this.context = context;
         this.scores = scores;
-        this.players = players;
+        this.games = games;
     }
 
     @NonNull
     @Override
     public ScoreViewHelper onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater= LayoutInflater.from(parent.getContext());
-        View view=inflater.inflate(R.layout.score_card,parent,false);
+        View view=inflater.inflate(R.layout.profile_score_card,parent,false);
         return new ScoreViewHelper(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ScoreViewHelper holder, int position) {
-//        Toast.makeText(context, "PlayerScore:"+players.get(position).getAlias()+"="+scores.get(position).toString(), Toast.LENGTH_SHORT).show();
-        holder.userScore.setText(""+scores.get(position));
-        holder.userAlias.setText(""+players.get(position).getAlias());
-        Glide.with(context).load(Uri.parse(players.get(position).getPhotoUrl())).into(holder.userDp);
+        holder.gameName.setText(games.get(position));
+        holder.gameScore.setText(""+scores.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return players.size();
+        return games.size();
     }
 
     public class ScoreViewHelper extends RecyclerView.ViewHolder {
-        TextView userAlias,userScore;
-        ImageView userDp;
+        TextView gameName,gameScore;
         public ScoreViewHelper(@NonNull View itemView) {
             super(itemView);
-            userAlias = itemView.findViewById(R.id.userAlias);
-            userScore = itemView.findViewById(R.id.userScore);
-            userDp = itemView.findViewById(R.id.userDP);
+           gameName = itemView.findViewById(R.id.gameName);
+           gameScore = itemView.findViewById(R.id.gameScore);
         }
     }
 }

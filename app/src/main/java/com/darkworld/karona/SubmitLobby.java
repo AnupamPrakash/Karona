@@ -27,16 +27,18 @@ import java.util.List;
 
 public class SubmitLobby extends AppCompatActivity {
 
-    String lobbyCode,round,ownResponse,currQuestion;
+    String lobbyCode,round,ownResponse,currQuestion,UserId;
     User currentUser;
     TextView roundQuestion,roundResponse,playersCounter;
     RecyclerView submitList;
     ImageView userDP;
+    DatabaseReference dbRef;
     List<String> responses;
     SubmitListAdapter submitListAdapter;
     List<User> players;
     List<Long> scores;
     int playersCount;
+    ValueEventListener valueEventListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,7 @@ public class SubmitLobby extends AppCompatActivity {
         currentUser = (User) getIntent().getSerializableExtra("User");
         currQuestion = getIntent().getStringExtra("Question");
         ownResponse = getIntent().getStringExtra("Response");
+        dbRef= FirebaseDatabase.getInstance().getReference().child("Users");
         roundQuestion = findViewById(R.id.roundQuestion);
         userDP= findViewById(R.id.submitUserDp);
         roundResponse = findViewById(R.id.roundResponse);
@@ -110,14 +113,21 @@ public class SubmitLobby extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dbRef.child(UserId).removeEventListener(valueEventListener);
+    }
+
     private void loadPlayer(String uid) {
-        DatabaseReference dbRef= FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
-        dbRef.addValueEventListener(new ValueEventListener() {
+        UserId = uid;
+        valueEventListener=dbRef.child(uid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 players.add(user);
-                Glide.with(SubmitLobby.this).load(Uri.parse(user.getPhotoUrl())).into(userDP);
+//                Glide.with(SubmitLobby.this).load(Uri.parse(user.getPhotoUrl())).into(userDP);
             }
 
             @Override

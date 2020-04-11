@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:gravity="center_horizontal"
     android:padding="25dp"
-    android:background="@color/cardview_shadow_start_color"
     android:orientation="vertical"
     android:layout_height="match_parent"
     tools:context=".SubmitLobby"

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -26,12 +27,16 @@ public class GameSelectionActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     FirebaseAuth firebaseAuth;
     FirebaseUser currentUser;
+    ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_selection);
         gameList = new ArrayList<Game>();
         recyclerView = findViewById(R.id.gameList);
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading Games");
+        progressDialog.show();
         firebaseAuth = FirebaseAuth.getInstance();
         currentUser = firebaseAuth.getCurrentUser();
         loadGames();
@@ -53,6 +58,7 @@ public class GameSelectionActivity extends AppCompatActivity {
                 Toast.makeText(GameSelectionActivity.this, ""+gameList.size(), Toast.LENGTH_SHORT).show();
                 recyclerView.setAdapter(new GameListAdapter(GameSelectionActivity.this,gameList,currentUser));
                 recyclerView.setLayoutManager(new LinearLayoutManager(GameSelectionActivity.this));
+                progressDialog.dismiss();
             }
 
             @Override

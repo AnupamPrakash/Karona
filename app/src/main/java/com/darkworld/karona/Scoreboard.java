@@ -25,9 +25,9 @@ public class Scoreboard extends AppCompatActivity {
 
     String lobbyCode,gameName;
     Button done;
-    long score;
-    List<Long> scores;
+    List<Long> scores,prevScores;
     ProgressDialog progressDialog;
+    ValueEventListener valueEventListener;
     List<User> players;
     ScoreListAdapter scoreListAdapter;
     RecyclerView scorelist;
@@ -39,6 +39,7 @@ public class Scoreboard extends AppCompatActivity {
         scorelist = findViewById(R.id.scoreList);
         scores = new ArrayList<Long>();
         players = new ArrayList<User>();
+        prevScores = new ArrayList<Long>();
         scoreListAdapter = new ScoreListAdapter(Scoreboard.this,scores,players);
         scorelist.setLayoutManager(new LinearLayoutManager(this));
         scorelist.setAdapter(scoreListAdapter);
@@ -67,12 +68,13 @@ public class Scoreboard extends AppCompatActivity {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatabaseReference dbRef2 = FirebaseDatabase.getInstance().getReference().child("Users");
+//                final DatabaseReference dbRef2 = FirebaseDatabase.getInstance().getReference().child("Users");
                 for(int i=0;i<players.size();i++)
                 {
                     getScore(players.get(i).getUserId());
-                    dbRef2.child(players.get(i).getUserId()).child("Scores").child(gameName).setValue(score+scores.get(i));
                 }
+                DatabaseReference dbRef= FirebaseDatabase.getInstance().getReference().child("Users");
+                dbRef.removeEventListener(valueEventListener);
                 deleteLobby(lobbyCode);
 
             }
@@ -80,19 +82,19 @@ public class Scoreboard extends AppCompatActivity {
     }
 
     private void deleteLobby(String lobbyCode) {
+
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child("Lobbies").child(lobbyCode);
         dbRef.removeValue();
         startActivity(new Intent(Scoreboard.this,DashboardActivity.class));
         finish();
     }
 
-    private void getScore(String uid) {
-
+    private void getScore(final String uid) {
         DatabaseReference dbRef= FirebaseDatabase.getInstance().getReference().child("Users").child(uid).child("Scores").child(gameName);
         dbRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-               score = (long) dataSnapshot.getValue();
+               prevScores.add((long) dataSnapshot.getValue());
             }
 
             @Override
@@ -110,13 +112,13 @@ public class Scoreboard extends AppCompatActivity {
     }
     private void loadPlayer(String uid) {
         DatabaseReference dbRef= FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
-        dbRef.addValueEventListener(new ValueEventListener() {
+         valueEventListener = dbRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 players.add(user);
-                Toast.makeText(Scoreboard.this, ""+user.getUserId(), Toast.LENGTH_SHORT).show();
-                scoreListAdapter.notifyItemInserted(scores.size()-1);
+                Toast.makeText(Scoreboard.this, "" + user.getUserId(), Toast.LENGTH_SHORT).show();
+                scoreListAdapter.notifyItemInserted(scores.size() - 1);
                 scorelist.setAdapter(scoreListAdapter);
             }
 

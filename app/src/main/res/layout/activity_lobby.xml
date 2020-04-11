@@ -4,65 +4,53 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background2"
+    android:backgroundTint="@color/cardview_light_background"
     tools:context=".Lobby">
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="178dp"
         android:layout_alignParentTop="true"
         android:layout_marginTop="0dp"
         android:background="@drawable/lobbyback">
-
         <Button
-
             android:layout_width="138dp"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="67dp"
             android:id="@+id/shareCode"
             android:layout_marginEnd="41dp"
-            android:textColor="#fff"
-            android:textStyle="bold"
-            android:background="@drawable/btn"
+            android:background="@drawable/startgamebtn"
             android:text="SHARE code" />
-
     </RelativeLayout>
-
     <TextView
-            android:layout_width="247dp"
-            android:layout_height="69dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="82dp"
-            android:layout_marginTop="-6dp"
-            android:layout_marginEnd="105dp"
-            android:gravity="center"
-            android:text="SECRET CODE"
-            android:fontFamily="@font/bungee"
-            android:textColor="#fff"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-
-
-        <TextView
-            android:id="@+id/LobbyCodeText"
-            android:layout_width="147dp"
-            android:layout_height="65dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="56dp"
-            android:layout_marginTop="64dp"
-            android:gravity="center"
-            android:text="SECRET CODE"
-            android:textColor="#fff"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-
+        android:layout_width="247dp"
+        android:layout_height="69dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="82dp"
+        android:layout_marginTop="-6dp"
+        android:layout_marginEnd="105dp"
+        android:gravity="center"
+        android:text="SECRET CODE"
+        android:fontFamily="@font/bungee"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+    <TextView
+        android:id="@+id/LobbyCodeText"
+        android:layout_width="147dp"
+        android:layout_height="65dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="64dp"
+        android:gravity="center"
+        android:text="SECRET CODE"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold" />
     <TextView
         android:layout_width="247dp"
         android:layout_height="69dp"
@@ -74,9 +62,8 @@
         android:fontFamily="@font/satisfy"
         android:gravity="center"
         android:text="Waiting for people to Join"
-        android:textColor="#fff"
+        android:textColor="#000000"
         android:textSize="20sp" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/playerList"
         android:layout_width="wrap_content"
@@ -103,9 +90,6 @@
         android:visibility="gone"
         android:shadowRadius="5"
         android:text="PREPARE GAME"
-        android:textColor="#FFF"
+        android:textColor="#FFFFFF"
         android:textSize="30sp" />
-
-
 </RelativeLayout>
-

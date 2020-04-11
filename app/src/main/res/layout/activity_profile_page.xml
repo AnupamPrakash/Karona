@@ -16,6 +16,7 @@
         <ImageButton
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:id="@+id/back"
             android:src="@drawable/ic_arrow_back_black_24dp"
             android:background="#00000000"/>
 
@@ -30,58 +31,102 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
                     android:orientation="vertical"
                     android:background="@drawable/frame"
                     android:layout_gravity="center_horizontal">
                     <ImageView
                         android:layout_gravity="center_horizontal"
-                        android:layout_width="240dp"
-                        android:layout_height="240dp"
+                        android:layout_width="match_parent"
+                        android:layout_margin="11dp"
+                        android:layout_height="match_parent"
                         android:id="@+id/profile_pic"
-                        android:onClick="selectImage"
                         android:src="@drawable/ic_person_black_200dp"
                         />
                 </LinearLayout>
 
-                <EditText
+
+<!--                <EditText-->
+<!--                    android:layout_marginTop="16dp"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:scrollbars="horizontal"-->
+<!--                    android:hint="Enter profile name"-->
+<!--                    android:fontFamily="serif-monospace"-->
+<!--                    android:textSize="24sp"-->
+<!--                    android:textColor="#ffffff"-->
+<!--                    android:inputType="textPersonName"/>-->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="20dp"
+                    android:id="@+id/aliascard"
+                    android:layout_marginTop="16dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="25sp"
+                        android:gravity="center"
+                        android:layout_margin="5dp"
+                        android:textColor="@color/colorPrimary"
+                        android:id="@+id/userAlias"
+                        android:text="User Alias"
+                        android:layout_weight="9"/>
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:layout_marginHorizontal="15dp"
+                            android:src="@drawable/ic_mode_edit_black_24dp"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+                <TextView
                     android:layout_marginTop="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:scrollbars="horizontal"
-                    android:hint="Enter profile name"
+                    android:text="UserName"
+                    android:gravity="center"
+                    android:textStyle="bold"
                     android:fontFamily="serif-monospace"
                     android:textSize="24sp"
                     android:textColor="#ffffff"
-                    android:inputType="textPersonName"/>
+                    android:id="@+id/userName"/>
 
+                <TextView
+                    android:layout_marginTop="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Email Id"
+                    android:gravity="center"
+                    android:fontFamily="serif-monospace"
+                    android:textSize="18sp"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold"
+                    android:id="@+id/userEmail"/>
+            <TextView
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Scores"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:fontFamily="serif-monospace"
+                android:textSize="24sp"
+                android:textColor="#ffffff"/>
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="24dp">
-                    <!--cancel button-->
-                    <ImageButton
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:background="@drawable/close_button"
-                        android:src="@drawable/ic_close_black_24dp"
-                        android:padding="10dp"
-                        android:layout_margin="10dp"/>
-                    <!--submit button-->
-                    <Button
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Save"
-                        android:fontFamily="serif-monospace"
-                        android:textStyle="bold"
-                        android:textColor="#fff"
-                        android:textSize="24dp"
-                        android:background="@drawable/whitebtn"
-                        android:layout_margin="10dp"
-                        android:padding="10dp"/>
-                </LinearLayout>
+                    android:layout_height="2dp"
+                    android:background="@color/white"/>
+               <androidx.recyclerview.widget.RecyclerView
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:id="@+id/profileScores"/>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
