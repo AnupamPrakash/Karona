@@ -78,12 +78,10 @@ public class GameListAdapter extends RecyclerView.Adapter<GameListAdapter.GameVi
     private void generateLobby(final Game game) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Create Lobby");
-        final TextView textView = new TextView(context);
-        builder.setView(textView);
         Random random = new Random(System.currentTimeMillis());
         final int rnd = 100000+random.nextInt(500000);
-        textView.setText(""+rnd);
-        builder.setPositiveButton("Share", new DialogInterface.OnClickListener() {
+        builder.setMessage(""+rnd);
+        builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(context,Lobby.class);
@@ -103,7 +101,7 @@ public class GameListAdapter extends RecyclerView.Adapter<GameListAdapter.GameVi
         dbRef.child("GameCode").setValue(game.getGameId());
         dbRef.child("Players").push().setValue(currentUser.getUid());
         dbRef.child("Start").setValue("False");
-        Toast.makeText(context, "Successful: "+dbRef.getDatabase().toString(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, "Successful: "+dbRef.getDatabase().toString(), Toast.LENGTH_SHORT).show();
     }
     public class GameViewHelper extends RecyclerView.ViewHolder {
         TextView gameName;

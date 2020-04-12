@@ -42,7 +42,7 @@
                         android:layout_margin="11dp"
                         android:layout_height="match_parent"
                         android:id="@+id/profile_pic"
-                        android:src="@drawable/ic_person_black_200dp"
+                        android:src="@drawable/mario_head"
                         />
                 </LinearLayout>
 

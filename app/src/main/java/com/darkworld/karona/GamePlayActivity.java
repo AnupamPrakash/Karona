@@ -6,14 +6,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,6 +39,7 @@ public class GamePlayActivity extends AppCompatActivity {
     EditText response;
     TextView question,countdownTime,roundCounter;
     Timer timer;
+    ImageView userdp;
     Button submit;
     private static final long COUNTDOWN_IN_MILLIS = 30000;
     private CountDownTimer countDownTimer;
@@ -66,6 +70,7 @@ public class GamePlayActivity extends AppCompatActivity {
         }
         submit = findViewById(R.id.submitResponse);
         roundCounter =  findViewById(R.id.roundCounter);
+        userdp = findViewById(R.id.userDpGamePlay);
         countdownTime = findViewById(R.id.countdownTime);
         question = findViewById(R.id.txtQuestion);
         roundQuestions = new ArrayList<String>();
@@ -76,6 +81,9 @@ public class GamePlayActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 currentUser = dataSnapshot.getValue(User.class);
+                if(!currentUser.getPhotoUrl().equals("Null"))
+                    Glide.with(GamePlayActivity.this).load(Uri.parse(currentUser.getPhotoUrl())).into(userdp);
+
 //            }
 
             }

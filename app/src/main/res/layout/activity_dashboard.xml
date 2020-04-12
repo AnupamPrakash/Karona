@@ -6,34 +6,35 @@
     android:layout_gravity="center"
     android:orientation="vertical"
     android:background="@drawable/background2">
-<androidx.appcompat.widget.Toolbar
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/colorPrimary"
-    app:title="@string/app_name"
-    app:titleTextColor="@color/white"
-    >
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:src="@drawable/ic_person_black_24dp"
-        android:layout_marginLeft="300dp"
-        android:id="@+id/profile"/>
-</androidx.appcompat.widget.Toolbar>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:orientation="vertical">
-        <!--back button-->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="center"
-            android:layout_marginTop="@android:dimen/notification_large_icon_height">
-            <!--            join game-->
+            android:padding="15dp"
+            android:weightSum="5"
+            android:layout_marginBottom="30dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="35sp"
+                android:textStyle="bold"
+                android:layout_weight="5"
+                android:text="@string/app_name"
+                android:layout_gravity="center_vertical"/>
 
+            <ImageView
+                android:id="@+id/profile"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_person_black_24dp" />
+        </LinearLayout>
+        <!--back button-->
             <ImageView
                 android:id="@+id/join_game"
                 android:layout_width="190dp"
@@ -46,7 +47,6 @@
                 android:layout_height="200dp"
                 android:src="@drawable/ic_create_button"
                 android:id="@+id/create_game"/>
-        </LinearLayout>
 
     </LinearLayout>
 

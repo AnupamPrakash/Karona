@@ -68,7 +68,7 @@ public class Lobby extends AppCompatActivity {
         if(callingActivity.equals("CreateGame"))
         {
             startGame.setVisibility(View.VISIBLE);
-            Toast.makeText(this, "Questions: "+gameQuestions.size(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Questions: "+gameQuestions.size(), Toast.LENGTH_SHORT).show();
 //            Toast.makeText(this, "Questions: "+gameQuestions.size(), Toast.LENGTH_SHORT).show();
         }
         startGame.setOnClickListener(new View.OnClickListener() {
@@ -96,8 +96,8 @@ public class Lobby extends AppCompatActivity {
                     intent.putExtra("GameName",GameName);
                     intent.putExtra("Activity", "Lobby");
                     startActivity(intent);
-                    Toast.makeText(Lobby.this, "Players: " + playerNames, Toast.LENGTH_SHORT).show();
-                    Toast.makeText(Lobby.this, "Questions: " + gameQuestions.size(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(Lobby.this, "Players: " + playerNames, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(Lobby.this, "Questions: " + gameQuestions.size(), Toast.LENGTH_SHORT).show();
 //                    Toast.makeText(Lobby.this, "Players: " + playerNames, Toast.LENGTH_SHORT).show();
 //                    Toast.makeText(Lobby.this, "Questions: " + gameQuestions.size(), Toast.LENGTH_SHORT).show();
                 }
@@ -166,7 +166,7 @@ public class Lobby extends AppCompatActivity {
 //                Toast.makeText(Lobby.this, ""+user, Toast.LENGTH_SHORT).show();
                 playerListAdapter.notifyItemInserted(playersinLobby.size()-1);
                 playerList.setAdapter(playerListAdapter);
-                Toast.makeText(Lobby.this, ""+playersinLobby.get(playersinLobby.size()-1).getAlias(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(Lobby.this, ""+playersinLobby.get(playersinLobby.size()-1).getAlias(), Toast.LENGTH_SHORT).show();
 //                Toast.makeText(Lobby.this, ""+playersinLobby.get(playersinLobby.size()-1).getAlias(), Toast.LENGTH_SHORT).show();
             }
 
@@ -182,7 +182,7 @@ public class Lobby extends AppCompatActivity {
     }
 
     private void loadQuestions(String gameName) {
-        Toast.makeText(this, ""+gameName, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, ""+gameName, Toast.LENGTH_SHORT).show();
 //        Toast.makeText(this, ""+gameName, Toast.LENGTH_SHORT).show();
 //        CountDownLatch done = new CountDownLatch(1);
         DatabaseReference quesRef = FirebaseDatabase.getInstance().getReference().child(gameName);

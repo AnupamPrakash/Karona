@@ -53,9 +53,9 @@ public class GameSelectionActivity extends AppCompatActivity {
                     game.setGameName((String) dataSnapshot1.child("name").getValue());
                     game.setGameLogo((String) dataSnapshot1.child("logo").getValue());
                     gameList.add(game);
-                    Toast.makeText(GameSelectionActivity.this, ""+game.getGameName(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(GameSelectionActivity.this, ""+game.getGameName(), Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(GameSelectionActivity.this, ""+gameList.size(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(GameSelectionActivity.this, ""+gameList.size(), Toast.LENGTH_SHORT).show();
                 recyclerView.setAdapter(new GameListAdapter(GameSelectionActivity.this,gameList,currentUser));
                 recyclerView.setLayoutManager(new LinearLayoutManager(GameSelectionActivity.this));
                 progressDialog.dismiss();

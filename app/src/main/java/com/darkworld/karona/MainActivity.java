@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
 //                            Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             progressdialog.dismiss();
-                            dbUserEntry(user);
+//                            dbUserEntry(user);
                             Snackbar.make(findViewById(R.id.linearlayout), "Succesfully signed in", Snackbar.LENGTH_SHORT).show();
                             startActivity(new Intent(MainActivity.this,DashboardActivity.class));
                             finish();
@@ -137,26 +137,6 @@ public class MainActivity extends AppCompatActivity {
 //        getAlias();
         customUser= new User(user.getDisplayName(),user.getUid(),user.getEmail(),alias,user.getPhotoUrl().toString());
         mDatabase.setValue(customUser);
-    }
-
-    private void getAlias() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Alias Name");
-        final EditText input = new EditText(this);
-        builder.setView(input);
-        builder.setPositiveButton("Join", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-//                alias = input.getText().toString();
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        builder.show();
     }
 
     private void loginWithGoogle() {

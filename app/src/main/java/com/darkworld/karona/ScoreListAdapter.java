@@ -41,7 +41,8 @@ public class ScoreListAdapter extends RecyclerView.Adapter<ScoreListAdapter.Scor
 //        Toast.makeText(context, "PlayerScore:"+players.get(position).getAlias()+"="+scores.get(position).toString(), Toast.LENGTH_SHORT).show();
         holder.userScore.setText(""+scores.get(position));
         holder.userAlias.setText(""+players.get(position).getAlias());
-        Glide.with(context).load(Uri.parse(players.get(position).getPhotoUrl())).into(holder.userDp);
+        if(!players.get(position).getPhotoUrl().equals("Null"))
+            Glide.with(context).load(Uri.parse(players.get(position).getPhotoUrl())).into(holder.userDp);
     }
 
     @Override

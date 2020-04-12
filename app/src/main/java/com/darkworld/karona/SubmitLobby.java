@@ -51,9 +51,7 @@ public class SubmitLobby extends AppCompatActivity {
         ownResponse = getIntent().getStringExtra("Response");
         dbRef= FirebaseDatabase.getInstance().getReference().child("Users");
         roundQuestion = findViewById(R.id.roundQuestion);
-        userDP= findViewById(R.id.submitUserDp);
         roundResponse = findViewById(R.id.roundResponse);
-        playersCounter = findViewById(R.id.players);
         submitList = findViewById(R.id.submitList);
         roundQuestion.setText(currQuestion);
         roundResponse.setText(ownResponse);
@@ -68,10 +66,10 @@ public class SubmitLobby extends AppCompatActivity {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 responses.add(dataSnapshot.getValue().toString());
-//                if(dataSnapshot.getKey().equals(currentUser.getUserId())==false)
+                if(dataSnapshot.getKey().equals(currentUser.getUserId())==false)
                     loadPlayer(dataSnapshot.getKey());
                     loadScore(dataSnapshot.getKey());
-                playersCounter.setText(""+players.size());
+//                playersCounter.setText(""+players.size());
 //                Toast.makeText(SubmitLobby.this, ""+dataSnapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
                 submitListAdapter.notifyItemInserted(responses.size()-1);
                 submitList.setAdapter(submitListAdapter);
@@ -117,7 +115,7 @@ public class SubmitLobby extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        dbRef.child(UserId).removeEventListener(valueEventListener);
+//        dbRef.child(UserId).removeEventListener(valueEventListener);
     }
 
     private void loadPlayer(String uid) {

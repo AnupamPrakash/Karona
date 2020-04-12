@@ -34,7 +34,8 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Pl
     public void onBindViewHolder(@NonNull PlayerListAdapter.PlayerViewHolder holder, int position) {
         User player = players.get(position);
         holder.userAlias.setText(player.getAlias());
-        Glide.with(context).load(Uri.parse(player.getPhotoUrl())).into(holder.userDp);
+        if(!player.getPhotoUrl().toString().equals("Null"))
+            Glide.with(context).load(Uri.parse(player.getPhotoUrl())).into(holder.userDp);
         Log.d("PlayerListSize",""+players.size());
     }
 
