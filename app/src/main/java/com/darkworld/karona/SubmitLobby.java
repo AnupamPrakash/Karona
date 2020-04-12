@@ -67,8 +67,8 @@ public class SubmitLobby extends AppCompatActivity {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 responses.add(dataSnapshot.getValue().toString());
                 if(dataSnapshot.getKey().equals(currentUser.getUserId())==false)
-                    loadPlayer(dataSnapshot.getKey());
-                    loadScore(dataSnapshot.getKey());
+                    {loadPlayer(dataSnapshot.getKey());
+                    loadScore(dataSnapshot.getKey());}
 //                playersCounter.setText(""+players.size());
 //                Toast.makeText(SubmitLobby.this, ""+dataSnapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
                 submitListAdapter.notifyItemInserted(responses.size()-1);

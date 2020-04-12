@@ -55,19 +55,12 @@ public class GamePlayActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game_play);
         rounds=10;
         callingActivity = getIntent().getStringExtra("Activity");
-        if(callingActivity.equals("Lobby")) {
-            lobbyCode = getIntent().getStringExtra("LobbyCode");
-            countPlayers = getIntent().getIntExtra("PlayersCount", 5);
+        lobbyCode = getIntent().getStringExtra("LobbyCode");
+        countPlayers = getIntent().getIntExtra("PlayersCount", 5);
 //            rounds = getIntent().getIntExtra("Rounds", 5);
-            gameName = getIntent().getStringExtra("GameName");
-            loadQuestions(lobbyCode);
-        }
-        else if(callingActivity.equals("SubmitLobby")) {
-            User player = (User) getIntent().getSerializableExtra("User");
-            lobbyCode = getIntent().getStringExtra("LobbyCode");
-//            loadScore(player.getUserId());
-//            updateScore(player.getUserId());
-        }
+        gameName = getIntent().getStringExtra("GameName");
+        loadQuestions(lobbyCode);
+
         submit = findViewById(R.id.submitResponse);
         roundCounter =  findViewById(R.id.roundCounter);
         userdp = findViewById(R.id.userDpGamePlay);

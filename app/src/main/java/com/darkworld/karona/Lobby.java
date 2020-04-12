@@ -89,8 +89,6 @@ public class Lobby extends AppCompatActivity {
 
                     dbRef2.child("Start").setValue("True");
                     Intent intent = new Intent(Lobby.this, GamePlayActivity.class);
-                    intent.putExtra("Rounds", 5);
-                    intent.putExtra("Rounds", 10);
                     intent.putExtra("LobbyCode", LobbyCode);
                     intent.putExtra("Activity", callingActivity);
                     intent.putExtra("GameName",GameName);
