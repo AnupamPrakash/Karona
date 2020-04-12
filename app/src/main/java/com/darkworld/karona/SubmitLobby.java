@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,18 +64,22 @@ public class SubmitLobby extends AppCompatActivity {
         responses = new ArrayList<String>();
         players = new ArrayList<User>();
         scores = new ArrayList<Long>();
+//        hash_resp.clear();
         submitList.setLayoutManager(new LinearLayoutManager(this));
         submitListAdapter = new SubmitListAdapter(SubmitLobby.this,players,responses, scores, lobbyCode,playersCount);
         DatabaseReference dbRef= FirebaseDatabase.getInstance().getReference().child("Lobbies").child(lobbyCode).child("Rounds").child(round).child("Responses");
         dbRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                Toast.makeText(SubmitLobby.this, "", Toast.LENGTH_SHORT).show();
+                Log.d("HashSet",hash_resp.toString());
                 for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
                 {
                 if(dataSnapshot1.getKey().equals(currentUser.getUserId())==false)
                 {
                     if(!hash_resp.contains(dataSnapshot1.getKey()))
                     {
+                        Toast.makeText(SubmitLobby.this, "Alias: "+dataSnapshot1.getValue().toString(), Toast.LENGTH_SHORT).show();
                         hash_resp.add(dataSnapshot1.getKey());
                         responses.add(dataSnapshot1.getValue().toString());
                         loadPlayer(dataSnapshot1.getKey());
@@ -133,7 +138,9 @@ public class SubmitLobby extends AppCompatActivity {
         });
 
     }
-
+    public void backPress(){
+        super.onBackPressed();
+    }
     @Override
     public void onBackPressed() {
 //        super.onBackPressed();

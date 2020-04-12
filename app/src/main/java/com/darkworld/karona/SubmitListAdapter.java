@@ -70,7 +70,7 @@ public class SubmitListAdapter extends RecyclerView.Adapter<SubmitListAdapter.Su
 //                context.startActivity(intent);
 //                context.
                 databaseReference.child("Lobbies").child(lobbyCode).child("Scores").child(player.getUserId()).setValue(scores.get(position)+4);
-                ((SubmitLobby)context).onBackPressed();
+                ((SubmitLobby)context).backPress();
             }
         });
     }
