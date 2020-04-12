@@ -133,4 +133,10 @@ public class SubmitLobby extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        Toast.makeText(this, "Wait for others to submit answer.", Toast.LENGTH_SHORT).show();
+    }
 }
