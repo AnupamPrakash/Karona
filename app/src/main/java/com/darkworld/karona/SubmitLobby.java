@@ -23,7 +23,9 @@ import com.google.firebase.database.ValueEventListener;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class SubmitLobby extends AppCompatActivity {
 
@@ -36,6 +38,7 @@ public class SubmitLobby extends AppCompatActivity {
     List<String> responses;
     SubmitListAdapter submitListAdapter;
     List<User> players;
+    Set<String> hash_resp;
     List<Long> scores;
     int playersCount;
     ValueEventListener valueEventListener;
@@ -47,6 +50,7 @@ public class SubmitLobby extends AppCompatActivity {
         lobbyCode = getIntent().getStringExtra("LobbyCode");
         round = getIntent().getStringExtra("Round");
         currentUser = (User) getIntent().getSerializableExtra("User");
+        hash_resp = new HashSet<String>();
         currQuestion = getIntent().getStringExtra("Question");
         ownResponse = getIntent().getStringExtra("Response");
         dbRef= FirebaseDatabase.getInstance().getReference().child("Users");
@@ -62,34 +66,26 @@ public class SubmitLobby extends AppCompatActivity {
         submitList.setLayoutManager(new LinearLayoutManager(this));
         submitListAdapter = new SubmitListAdapter(SubmitLobby.this,players,responses, scores, lobbyCode,playersCount);
         DatabaseReference dbRef= FirebaseDatabase.getInstance().getReference().child("Lobbies").child(lobbyCode).child("Rounds").child(round).child("Responses");
-        dbRef.addChildEventListener(new ChildEventListener() {
+        dbRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                if(dataSnapshot.getKey().equals(currentUser.getUserId())==false)
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
+                {
+                if(dataSnapshot1.getKey().equals(currentUser.getUserId())==false)
+                {
+                    if(!hash_resp.contains(dataSnapshot1.getKey()))
                     {
-                        responses.add(dataSnapshot.getValue().toString());
-                        loadPlayer(dataSnapshot.getKey());
-                        loadScore(dataSnapshot.getKey());
+                        hash_resp.add(dataSnapshot1.getKey());
+                        responses.add(dataSnapshot1.getValue().toString());
+                        loadPlayer(dataSnapshot1.getKey());
+                        loadScore(dataSnapshot1.getKey());
+                        submitListAdapter.notifyItemInserted(responses.size()-1);
+                        submitList.setAdapter(submitListAdapter);
                     }
+                }
 //                playersCounter.setText(""+players.size());
 //                Toast.makeText(SubmitLobby.this, ""+dataSnapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
-                submitListAdapter.notifyItemInserted(responses.size()-1);
-                submitList.setAdapter(submitListAdapter);
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
+                }
             }
 
             @Override
