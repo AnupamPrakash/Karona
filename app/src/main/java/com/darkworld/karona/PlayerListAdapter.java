@@ -16,10 +16,11 @@ import java.util.List;
 public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.PlayerViewHolder> {
     Context context;
     List<User> players;
-
-    public PlayerListAdapter(Context context, List<User> players) {
+    boolean isLobby;
+    public PlayerListAdapter(Context context, List<User> players,boolean isLobby) {
         this.context = context;
         this.players = players;
+        this.isLobby=isLobby;
     }
 
     @NonNull
@@ -33,6 +34,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Pl
     @Override
     public void onBindViewHolder(@NonNull PlayerListAdapter.PlayerViewHolder holder, int position) {
         User player = players.get(position);
+        if(isLobby)
         holder.userAlias.setText(player.getAlias());
         if(!player.getPhotoUrl().toString().equals("Null"))
             Glide.with(context).load(Uri.parse(player.getPhotoUrl())).into(holder.userDp);

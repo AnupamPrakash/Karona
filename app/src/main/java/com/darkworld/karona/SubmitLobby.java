@@ -3,12 +3,15 @@ package com.darkworld.karona;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,12 +36,13 @@ public class SubmitLobby extends AppCompatActivity {
     String lobbyCode,round,ownResponse,currQuestion,UserId;
     User currentUser;
     TextView roundQuestion,roundResponse,playersCounter;
-    RecyclerView submitList;
+    RecyclerView submitList,submitPlayers;
     ImageView userDP;
     DatabaseReference dbRef;
     List<String> responses;
     SubmitListAdapter submitListAdapter;
     List<User> players;
+    PlayerListAdapter playerListAdapter;
     Set<String> hash_resp;
     List<Long> scores;
     int playersCount;
@@ -58,39 +62,75 @@ public class SubmitLobby extends AppCompatActivity {
         roundQuestion = findViewById(R.id.roundQuestion);
         roundResponse = findViewById(R.id.roundResponse);
         submitList = findViewById(R.id.submitList);
+        submitPlayers = findViewById(R.id.submitPlayers);
         roundQuestion.setText(currQuestion);
         roundResponse.setText(ownResponse);
         playersCount = getIntent().getIntExtra("PlayersCount",5);
         responses = new ArrayList<String>();
         players = new ArrayList<User>();
         scores = new ArrayList<Long>();
-//        hash_resp.clear();
+        playerListAdapter = new PlayerListAdapter(this,players,false);
+        submitPlayers.setLayoutManager(new GridLayoutManager(this,2));
+        getSubmits(lobbyCode);
         submitList.setLayoutManager(new LinearLayoutManager(this));
         submitListAdapter = new SubmitListAdapter(SubmitLobby.this,players,responses, scores, lobbyCode,playersCount);
+    }
+
+    private void getSubmits(final String lobbyCode) {
         DatabaseReference dbRef= FirebaseDatabase.getInstance().getReference().child("Lobbies").child(lobbyCode).child("Rounds").child(round).child("Responses");
-        dbRef.addValueEventListener(new ValueEventListener() {
+//        dbRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+////                Toast.makeText(SubmitLobby.this, "", Toast.LENGTH_SHORT).show();
+//                Log.d("HashSet",hash_resp.toString());
+//                for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
+//                {
+//                    if(dataSnapshot1.getKey().equals(currentUser.getUserId())==false)
+//                    {
+//                        if(!hash_resp.contains(dataSnapshot1.getKey()))
+//                        {
+//                            Toast.makeText(SubmitLobby.this, "Alias: "+dataSnapshot1.getValue().toString(), Toast.LENGTH_SHORT).show();
+//                            hash_resp.add(dataSnapshot1.getKey());
+//                            responses.add(dataSnapshot1.getValue().toString());
+//                            loadPlayer(dataSnapshot1.getKey());
+//                            loadScore(dataSnapshot1.getKey());
+//                            submitListAdapter.notifyItemInserted(responses.size()-1);
+//                            submitList.setAdapter(submitListAdapter);
+//                        }
+//                    }
+////                playersCounter.setText(""+players.size());
+////                Toast.makeText(SubmitLobby.this, ""+dataSnapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+        dbRef.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                Toast.makeText(SubmitLobby.this, "", Toast.LENGTH_SHORT).show();
-                Log.d("HashSet",hash_resp.toString());
-                for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
-                {
-                if(dataSnapshot1.getKey().equals(currentUser.getUserId())==false)
-                {
-                    if(!hash_resp.contains(dataSnapshot1.getKey()))
-                    {
-                        Toast.makeText(SubmitLobby.this, "Alias: "+dataSnapshot1.getValue().toString(), Toast.LENGTH_SHORT).show();
-                        hash_resp.add(dataSnapshot1.getKey());
-                        responses.add(dataSnapshot1.getValue().toString());
-                        loadPlayer(dataSnapshot1.getKey());
-                        loadScore(dataSnapshot1.getKey());
-                        submitListAdapter.notifyItemInserted(responses.size()-1);
-                        submitList.setAdapter(submitListAdapter);
-                    }
-                }
-//                playersCounter.setText(""+players.size());
-//                Toast.makeText(SubmitLobby.this, ""+dataSnapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
-                }
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if(!dataSnapshot.getKey().equals(currentUser.getUserId()))
+                {responses.add(dataSnapshot.getValue().toString());}
+                loadPlayer(dataSnapshot.getKey());
+                loadScore(dataSnapshot.getKey());
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
             }
 
             @Override
@@ -98,8 +138,8 @@ public class SubmitLobby extends AppCompatActivity {
 
             }
         });
-
     }
+
     private void loadScore(String uid) {
         DatabaseReference dbRef= FirebaseDatabase.getInstance().getReference().child("Lobbies").child(lobbyCode).child("Scores").child(uid);
         dbRef.addValueEventListener(new ValueEventListener() {
@@ -121,14 +161,32 @@ public class SubmitLobby extends AppCompatActivity {
 //        dbRef.child(UserId).removeEventListener(valueEventListener);
     }
 
-    private void loadPlayer(String uid) {
+    private void loadPlayer(final String uid) {
         UserId = uid;
         valueEventListener=dbRef.child(uid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
+                if(!uid.equals(currentUser.getUserId()))
                 players.add(user);
+                playerListAdapter.notifyItemInserted(players.size()-1);
+                submitPlayers.setAdapter(playerListAdapter);
 //                Glide.with(SubmitLobby.this).load(Uri.parse(user.getPhotoUrl())).into(userDP);
+//                Toast.makeText(SubmitLobby.this, "Total Players"+playersCount+", Got Players:"+players.size(), Toast.LENGTH_SHORT).show();
+                if(players.size()==playersCount-1)
+                {
+//                    Toast.makeText(SubmitLobby.this, ""+players.size()+","+playersCount, Toast.LENGTH_SHORT).show();
+                    submitPlayers.setVisibility(View.GONE);
+                    submitList.setVisibility(View.VISIBLE);
+                    ProgressDialog progressDialog = new ProgressDialog(SubmitLobby.this);
+                    progressDialog.setMessage("Shuffling responses...");
+                    progressDialog.show();
+                    submitList.setLayoutManager(new LinearLayoutManager(SubmitLobby.this));
+//                    Toast.makeText(SubmitLobby.this, ""+responses, Toast.LENGTH_SHORT).show();
+                    submitListAdapter = new SubmitListAdapter(SubmitLobby.this,players,responses, scores, lobbyCode,playersCount);
+                    submitList.setAdapter(submitListAdapter);
+                    progressDialog.dismiss();
+                }
             }
 
             @Override

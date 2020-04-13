@@ -58,17 +58,12 @@ public class SubmitListAdapter extends RecyclerView.Adapter<SubmitListAdapter.Su
         }
         final User player = players.get(position);
         String response = responses.get(position);
+        Toast.makeText(context, ""+response, Toast.LENGTH_SHORT).show();
         holder.response.setText(response);
         holder.response.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "You selected "+player.getAlias()+"'s answer", Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(context,GamePlayActivity.class);
-//                intent.putExtra("LobbyCode",lobbyCode);
-//                intent.putExtra("Activity","SubmitLobby");
-//                intent.putExtra("User",player);
-//                context.startActivity(intent);
-//                context.
                 databaseReference.child("Lobbies").child(lobbyCode).child("Scores").child(player.getUserId()).setValue(scores.get(position)+4);
                 ((SubmitLobby)context).backPress();
             }

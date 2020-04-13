@@ -86,10 +86,11 @@ public class Lobby extends AppCompatActivity {
                     }
 //                    Toast.makeText(Lobby.this, "Questions: "+dbRef2.child("Questions").toString(), Toast.LENGTH_SHORT).show();
                 }else {
-
+//                    Toast.makeText(Lobby.this, "Players: "+playersinLobby.size(), Toast.LENGTH_SHORT).show();
                     dbRef2.child("Start").setValue("True");
                     Intent intent = new Intent(Lobby.this, GamePlayActivity.class);
                     intent.putExtra("LobbyCode", LobbyCode);
+                    intent.putExtra("PlayersCount",playersinLobby.size());
                     intent.putExtra("Activity", callingActivity);
                     intent.putExtra("GameName",GameName);
                     intent.putExtra("Activity", "Lobby");
@@ -102,7 +103,7 @@ public class Lobby extends AppCompatActivity {
             }
         });
         getPlayers(LobbyCode);
-        playerListAdapter = new PlayerListAdapter(this,playersinLobby);
+        playerListAdapter = new PlayerListAdapter(this,playersinLobby,true);
         playerList.setLayoutManager(new GridLayoutManager(this,2));
         playerList.setAdapter(playerListAdapter);
         if(callingActivity.equals("JoinGame")) {

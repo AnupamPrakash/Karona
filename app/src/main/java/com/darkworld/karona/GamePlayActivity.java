@@ -58,6 +58,7 @@ public class GamePlayActivity extends AppCompatActivity {
         lobbyCode = getIntent().getStringExtra("LobbyCode");
         countPlayers = getIntent().getIntExtra("PlayersCount", 5);
 //            rounds = getIntent().getIntExtra("Rounds", 5);
+//        Toast.makeText(this, "Players Count"+countPlayers, Toast.LENGTH_SHORT).show();
         gameName = getIntent().getStringExtra("GameName");
         loadQuestions(lobbyCode);
 

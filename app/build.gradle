@@ -43,6 +43,7 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
     implementation 'com.google.firebase:firebase-storage:19.1.1'
 
+
     //image cropper images
     api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
 
