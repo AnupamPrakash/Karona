@@ -76,6 +76,8 @@ public class ProfilePage extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading Profile...");
         progressDialog.show();
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
         img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,6 +95,7 @@ public class ProfilePage extends AppCompatActivity {
         });
         editAlias = findViewById(R.id.aliascard);
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+//        databaseReference.keepSynced(true);
         editAlias.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

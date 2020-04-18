@@ -37,6 +37,8 @@ public class GameSelectionActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading Games");
         progressDialog.show();
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
         firebaseAuth = FirebaseAuth.getInstance();
         currentUser = firebaseAuth.getCurrentUser();
         loadGames();
@@ -44,6 +46,7 @@ public class GameSelectionActivity extends AppCompatActivity {
 
     private void loadGames() {
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child("Games");
+//        dbRef.keepSynced(true);
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -55,7 +58,7 @@ public class GameSelectionActivity extends AppCompatActivity {
                     gameList.add(game);
 //                    Toast.makeText(GameSelectionActivity.this, ""+game.getGameName(), Toast.LENGTH_SHORT).show();
                 }
-//                Toast.makeText(GameSelectionActivity.this, ""+gameList.size(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(GameSelectionActivity.this, ""+gameList, Toast.LENGTH_SHORT).show();
                 recyclerView.setAdapter(new GameListAdapter(GameSelectionActivity.this,gameList,currentUser));
                 recyclerView.setLayoutManager(new LinearLayoutManager(GameSelectionActivity.this));
                 progressDialog.dismiss();

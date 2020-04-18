@@ -54,7 +54,6 @@ public class SubmitListAdapter extends RecyclerView.Adapter<SubmitListAdapter.Su
     public void onBindViewHolder(@NonNull SubmitListView holder, final int position) {
         if(players.size()>0) {
             holder.response.setClickable(true);
-            holder.layout.setBackgroundColor(R.color.white);
         }
         final User player = players.get(position);
         String response = responses.get(position);
