@@ -7,10 +7,12 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -49,26 +52,13 @@ public class GameListAdapter extends RecyclerView.Adapter<GameListAdapter.GameVi
     @Override
     public void onBindViewHolder(@NonNull GameViewHelper holder, int position) {
         final Game game = gamelist.get(position);
-        holder.gameName.setText(game.getGameName());
-        Bitmap imageBitmap = null;
-        try
-        {
-            imageBitmap = decodeFromFirebase64(game.getGameLogo());
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        holder.linearLayout.setBackground(new BitmapDrawable(imageBitmap));
-        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+        Glide.with(context).load(Uri.parse(game.getGameLogo())).into(holder.imageView);
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 generateLobby(game);
             }
         });
-    }
-
-    private Bitmap decodeFromFirebase64(String gameLogo) {
-        byte [] decodebyteArray = android.util.Base64.decode(gameLogo, Base64.DEFAULT);
-        return BitmapFactory.decodeByteArray(decodebyteArray,0,decodebyteArray.length);
     }
 
     @Override
@@ -101,15 +91,14 @@ public class GameListAdapter extends RecyclerView.Adapter<GameListAdapter.GameVi
         dbRef.child("GameCode").setValue(game.getGameId());
         dbRef.child("Players").push().setValue(currentUser.getUid());
         dbRef.child("Start").setValue("False");
+        dbRef.child("Submits").setValue(0);
 //        Toast.makeText(context, "Successful: "+dbRef.getDatabase().toString(), Toast.LENGTH_SHORT).show();
     }
     public class GameViewHelper extends RecyclerView.ViewHolder {
-        TextView gameName;
-        LinearLayout linearLayout;
+        ImageView imageView;
         public GameViewHelper(@NonNull View itemView) {
             super(itemView);
-            gameName = itemView.findViewById(R.id.gameName);
-            linearLayout = itemView.findViewById(R.id.cardLogo);
+            imageView = itemView.findViewById(R.id.gameDP);
         }
     }
 }

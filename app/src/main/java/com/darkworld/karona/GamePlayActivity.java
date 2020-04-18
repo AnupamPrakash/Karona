@@ -88,11 +88,6 @@ public class GamePlayActivity extends AppCompatActivity {
         });
     }
 
-    private void updateScore(String userId) {
-        DatabaseReference dbRef= FirebaseDatabase.getInstance().getReference().child("Lobbies").child(lobbyCode).child("Scores").child(userId);
-        dbRef.setValue(score+4);
-    }
-
     private void startGame() {
       showNextQuestion();
       submit.setOnClickListener(new View.OnClickListener() {
@@ -198,6 +193,7 @@ public class GamePlayActivity extends AppCompatActivity {
         Intent intent = new Intent(GamePlayActivity.this,Scoreboard.class);
         intent.putExtra("LobbyCode",lobbyCode);
         intent.putExtra("GameName",gameName);
+        intent.putExtra("PlayerCount",countPlayers);
         startActivity(intent);
     }
 
