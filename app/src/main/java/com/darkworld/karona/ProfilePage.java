@@ -100,10 +100,10 @@ public class ProfilePage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(ProfilePage.this);
-                builder.setTitle("Join Lobby");
+                builder.setTitle("Enter alias name");
                 final EditText input = new EditText(ProfilePage.this);
                 builder.setView(input);
-                builder.setPositiveButton("Join", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("Change", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if(input.getText().toString().length()>0) {
