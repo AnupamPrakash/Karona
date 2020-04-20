@@ -5,25 +5,30 @@
     android:layout_width="match_parent"
     android:gravity="center_horizontal"
     android:padding="25dp"
+    android:weightSum="10"
     android:orientation="vertical"
     android:layout_height="match_parent"
     tools:context=".SubmitLobby"
     android:background="@drawable/background2">
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:textSize="25sp"
         android:textStyle="bold"
         android:text="Score Board"
         android:fontFamily="serif-monospace"/>
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="8"
         android:id="@+id/scoreList"/>
     <Button
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:id="@+id/doneBtn"
+        android:layout_weight="1"
+        android:visibility="gone"
         android:layout_marginTop="24dp"
         android:textStyle="bold"
         android:text="Done"

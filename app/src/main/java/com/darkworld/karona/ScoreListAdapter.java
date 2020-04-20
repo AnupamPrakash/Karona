@@ -2,6 +2,7 @@ package com.darkworld.karona;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,13 +20,11 @@ import java.util.List;
 
 public class ScoreListAdapter extends RecyclerView.Adapter<ScoreListAdapter.ScoreViewHelper> {
     Context context;
-    List<Long> scores;
-    List<User> players;
+    List<Pair<User, Long>> gameScores;
 
-    public ScoreListAdapter(Context context, List<Long> scores, List<User> players) {
+    public ScoreListAdapter(Context context, List<Pair<User, Long>> gameScores) {
         this.context = context;
-        this.scores = scores;
-        this.players = players;
+        this.gameScores = gameScores;
     }
 
     @NonNull
@@ -39,15 +38,15 @@ public class ScoreListAdapter extends RecyclerView.Adapter<ScoreListAdapter.Scor
     @Override
     public void onBindViewHolder(@NonNull ScoreViewHelper holder, int position) {
 //        Toast.makeText(context, "PlayerScore:"+players.get(position).getAlias()+"="+scores.get(position).toString(), Toast.LENGTH_SHORT).show();
-        holder.userScore.setText(""+scores.get(position));
-        holder.userAlias.setText(""+players.get(position).getAlias());
-        if(!players.get(position).getPhotoUrl().equals("Null"))
-            Glide.with(context).load(Uri.parse(players.get(position).getPhotoUrl())).into(holder.userDp);
+        holder.userScore.setText(""+gameScores.get(position).second);
+        holder.userAlias.setText(""+gameScores.get(position).first.getAlias());
+        if(!gameScores.get(position).first.getPhotoUrl().equals("Null"))
+            Glide.with(context).load(Uri.parse(gameScores.get(position).first.getPhotoUrl())).into(holder.userDp);
     }
 
     @Override
     public int getItemCount() {
-        return players.size();
+        return gameScores.size();
     }
 
     public class ScoreViewHelper extends RecyclerView.ViewHolder {

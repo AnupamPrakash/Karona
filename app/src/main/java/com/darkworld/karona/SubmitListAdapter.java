@@ -57,7 +57,7 @@ public class SubmitListAdapter extends RecyclerView.Adapter<SubmitListAdapter.Su
         }
         final User player = players.get(position);
         String response = responses.get(position);
-        Toast.makeText(context, ""+response, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, ""+response, Toast.LENGTH_SHORT).show();
         holder.response.setText(response);
         holder.response.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -100,10 +100,10 @@ public class ProfilePage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(ProfilePage.this);
-                builder.setTitle("Join Lobby");
+                builder.setTitle("Edit Alias");
                 final EditText input = new EditText(ProfilePage.this);
                 builder.setView(input);
-                builder.setPositiveButton("Join", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("Edit", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if(input.getText().toString().length()>0) {
@@ -143,12 +143,12 @@ public class ProfilePage extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        databaseReference.removeEventListener(userEventListener);
-        databaseReference.child("Scores").removeEventListener(scoreEventListener);
+//        databaseReference.removeEventListener(userEventListener);
+//        databaseReference.child("Scores").removeEventListener(scoreEventListener);
     }
 
     private void getUser() {
-        userEventListener=databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user = dataSnapshot.getValue(User.class);
@@ -159,7 +159,7 @@ public class ProfilePage extends AppCompatActivity {
                 username.setText(user.getName());
                 if(!user.getPhotoUrl().equals("Null"))
                     Glide.with(ProfilePage.this).load(Uri.parse(user.getPhotoUrl())).into(img);
-                scoreEventListener=databaseReference.child("Scores").addValueEventListener(new ValueEventListener() {
+                databaseReference.child("Scores").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren())

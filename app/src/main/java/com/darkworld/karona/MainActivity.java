@@ -28,10 +28,15 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseUser currentUser;
     String alias="Default";
     User customUser;
+    List<String> gameNames;
     GoogleSignInClient mGoogleSignInClient;
     private int RC_SIGN_IN =1;
     @Override
@@ -50,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         firebaseAuth= FirebaseAuth.getInstance();
+        gameNames = new ArrayList<String>();
         currentUser = firebaseAuth.getCurrentUser();
         if(currentUser!=null)
             startActivity(new Intent(MainActivity.this,DashboardActivity.class));
@@ -97,7 +104,27 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+        getGames();
     }
+
+    private void getGames() {
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child("Games");
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
+                {
+                    gameNames.add((String) dataSnapshot1.child("name").getValue());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     boolean isEmailValid(CharSequence email)
     {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
@@ -137,6 +164,10 @@ public class MainActivity extends AppCompatActivity {
 //        getAlias();
         customUser= new User(user.getDisplayName(),user.getUid(),user.getEmail(),alias,user.getPhotoUrl().toString());
         mDatabase.setValue(customUser);
+        for(int i=0;i<gameNames.size();i++)
+        {
+            mDatabase.child("Scores").child(gameNames.get(i)).setValue(0);
+        }
     }
 
     private void loginWithGoogle() {

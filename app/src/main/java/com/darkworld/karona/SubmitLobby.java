@@ -78,41 +78,12 @@ public class SubmitLobby extends AppCompatActivity {
 
     private void getSubmits(final String lobbyCode) {
         DatabaseReference dbRef= FirebaseDatabase.getInstance().getReference().child("Lobbies").child(lobbyCode).child("Rounds").child(round).child("Responses");
-//        dbRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-////                Toast.makeText(SubmitLobby.this, "", Toast.LENGTH_SHORT).show();
-//                Log.d("HashSet",hash_resp.toString());
-//                for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
-//                {
-//                    if(dataSnapshot1.getKey().equals(currentUser.getUserId())==false)
-//                    {
-//                        if(!hash_resp.contains(dataSnapshot1.getKey()))
-//                        {
-//                            Toast.makeText(SubmitLobby.this, "Alias: "+dataSnapshot1.getValue().toString(), Toast.LENGTH_SHORT).show();
-//                            hash_resp.add(dataSnapshot1.getKey());
-//                            responses.add(dataSnapshot1.getValue().toString());
-//                            loadPlayer(dataSnapshot1.getKey());
-//                            loadScore(dataSnapshot1.getKey());
-//                            submitListAdapter.notifyItemInserted(responses.size()-1);
-//                            submitList.setAdapter(submitListAdapter);
-//                        }
-//                    }
-////                playersCounter.setText(""+players.size());
-////                Toast.makeText(SubmitLobby.this, ""+dataSnapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
         dbRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                if(!dataSnapshot.getKey().equals(currentUser.getUserId()))
-                {responses.add(dataSnapshot.getValue().toString());}
+//                if(!dataSnapshot.getKey().equals(currentUser.getUserId()))
+//                {responses.add(dataSnapshot.getValue().toString());}
+                responses.add(dataSnapshot.getValue().toString());
                 loadPlayer(dataSnapshot.getKey());
                 loadScore(dataSnapshot.getKey());
 
@@ -163,17 +134,17 @@ public class SubmitLobby extends AppCompatActivity {
 
     private void loadPlayer(final String uid) {
         UserId = uid;
-        valueEventListener=dbRef.child(uid).addValueEventListener(new ValueEventListener() {
+        dbRef.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-                if(!uid.equals(currentUser.getUserId()))
+//                if(!uid.equals(currentUser.getUserId()))
                 players.add(user);
                 playerListAdapter.notifyItemInserted(players.size()-1);
                 submitPlayers.setAdapter(playerListAdapter);
 //                Glide.with(SubmitLobby.this).load(Uri.parse(user.getPhotoUrl())).into(userDP);
 //                Toast.makeText(SubmitLobby.this, "Total Players"+playersCount+", Got Players:"+players.size(), Toast.LENGTH_SHORT).show();
-                if(players.size()==playersCount-1)
+                if(players.size()==playersCount)
                 {
 //                    Toast.makeText(SubmitLobby.this, ""+players.size()+","+playersCount, Toast.LENGTH_SHORT).show();
                     submitPlayers.setVisibility(View.GONE);

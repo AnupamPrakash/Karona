@@ -1,17 +1,27 @@
 package com.darkworld.karona;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
+
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,17 +30,16 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Scoreboard extends AppCompatActivity {
 
     String lobbyCode, gameName;
     Button done;
-    List<Long> scores, prevScores;
     ProgressDialog progressDialog;
-    ValueEventListener valueEventListener;
-    List<User> players;
     ScoreListAdapter scoreListAdapter;
+    List<Pair<User, Long>> gameScores;
     RecyclerView scorelist;
     int playerCount;
 
@@ -40,12 +49,7 @@ public class Scoreboard extends AppCompatActivity {
         setContentView(R.layout.activity_scoreboard);
         done = findViewById(R.id.doneBtn);
         scorelist = findViewById(R.id.scoreList);
-        scores = new ArrayList<Long>();
-        players = new ArrayList<User>();
-        prevScores = new ArrayList<Long>();
-        scoreListAdapter = new ScoreListAdapter(Scoreboard.this, scores, players);
-        scorelist.setLayoutManager(new LinearLayoutManager(this));
-        scorelist.setAdapter(scoreListAdapter);
+        gameScores = new ArrayList<Pair<User, Long>>();
         progressDialog = new ProgressDialog(this);
         lobbyCode = getIntent().getStringExtra("LobbyCode");
         gameName = getIntent().getStringExtra("GameName");
@@ -54,103 +58,29 @@ public class Scoreboard extends AppCompatActivity {
         progressDialog.show();
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
-
+        scoreListAdapter = new ScoreListAdapter(Scoreboard.this, gameScores);
+        scorelist.setLayoutManager(new LinearLayoutManager(this));
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child("Lobbies").child(lobbyCode);
-        dbRef.child("Submits").addListenerForSingleValueEvent(new ValueEventListener() {
+        dbRef.child("Submits").push().setValue(FirebaseAuth.getInstance().getCurrentUser().getUid().toString());
+        dbRef.child("Submits").addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                long temp = (long) dataSnapshot.getValue();
-                temp+=1;
-                dataSnapshot.getRef().setValue(temp);
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                loadPlayer(dataSnapshot.getValue().toString());
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-            }
-        });
-        dbRef.child("Submits").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if ((long)dataSnapshot.getValue()==playerCount) {
-                    Toast.makeText(Scoreboard.this, "Loading Scores", Toast.LENGTH_SHORT).show();
-                    loadScores();
-                }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-            }
-        });
-//
-    }
-//
-    private void deleteLobby(String lobbyCode) {
-
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child("Lobbies").child(lobbyCode);
-        dbRef.removeValue();
-        startActivity(new Intent(Scoreboard.this,DashboardActivity.class));
-        finish();
-    }
-
-    private void getScore(final String uid) {
-        DatabaseReference dbRef= FirebaseDatabase.getInstance().getReference().child("Users").child(uid).child("Scores").child(gameName);
-        dbRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-               prevScores.add((long) dataSnapshot.getValue());
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-            }
-        });
-    }
-
-    @Override
-    public void onBackPressed() {
-//        super.onBackPressed();
-//        startActivity(new Intent(Scoreboard.this,DashboardActivity.class));
-//        finish();
-    }
-    private void loadPlayer(String uid) {
-        DatabaseReference dbRef= FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
-         valueEventListener = dbRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                players.add(user);
-//                Toast.makeText(Scoreboard.this, "" + user.getUserId(), Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-    }
-
-
-    private void loadScores() {
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child("Lobbies").child(lobbyCode);
-        dbRef.child("Scores").orderByValue().addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
-                {
-                    scores.add((Long) dataSnapshot1.getValue());
-                    loadPlayer(dataSnapshot1.getKey());
-                }
-                Collections.reverse(scores);
-                Collections.reverse(players);
-                Toast.makeText(Scoreboard.this, "Scores"+scores, Toast.LENGTH_SHORT).show();
-                Toast.makeText(Scoreboard.this, "Players"+players, Toast.LENGTH_SHORT).show();
-                scoreListAdapter.notifyItemInserted(scores.size() - 1);
-                scorelist.setAdapter(scoreListAdapter);
-                progressDialog.dismiss();
             }
 
             @Override
@@ -161,25 +91,116 @@ public class Scoreboard extends AppCompatActivity {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                final DatabaseReference dbRef2 = FirebaseDatabase.getInstance().getReference().child("Users");
-                for(int i=0;i<players.size();i++)
+                for(int i=0;i<gameScores.size();i++)
                 {
-                    getScore(players.get(i).getUserId());
+                    updateScore(gameScores.get(i));
                 }
+//                FirebaseDatabase.getInstance().getReference().child("Lobbies").child(lobbyCode).removeValue();
+//                dbRef.removeValue();
+                Intent intent = new Intent(Scoreboard.this,DashboardActivity.class);
+//                intent.putExtra("Activity","ScoreBoard");
+//                intent.putExtra("LobbyCode",lobbyCode);
+                startActivity(intent);
+               finish();
+            }
+        });
+//
+    }
 
-                updateScores();
-                deleteLobby(lobbyCode);
+
+    private void updateScore(final Pair<User, Long> pair) {
+        Log.d("Pair",pair.first.toString());
+        String uid = pair.first.getUserId();
+        DatabaseReference dbRef= FirebaseDatabase.getInstance().getReference().child("Users").child(uid).child("Scores").child(gameName);
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                long temp = (long) dataSnapshot.getValue();
+                dataSnapshot.getRef().setValue(temp+pair.second);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
     }
 
-    private void updateScores() {
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child("Users");
-        for(int i=0;i<players.size();i++)
-        {
-            dbRef.child(players.get(i).getUserId()).child("Scores").child(gameName).setValue(prevScores.get(i)+scores.get(i));
-        }
-        dbRef.removeEventListener((ValueEventListener) dbRef);
+    @Override
+    public void finish() {
+        super.finish();
+        Toast.makeText(this, "Redirecting", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+//        startActivity(new Intent(Scoreboard.this,DashboardActivity.class));
+//        finish();
+    }
+    private void loadPlayer(final String uid) {
+        DatabaseReference dbRef= FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                getcurrentScore(user,uid);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+
+    private void getcurrentScore(final User user, String uid) {
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child("Lobbies").child(lobbyCode);
+        dbRef.child("Scores").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
+//                {
+////                    scores.add((Long) dataSnapshot1.getValue());
+//                    loadPlayer(dataSnapshot1.getKey());
+//                }
+//                Collections.reverse(scores);
+//                Collections.reverse(players);
+//                Toast.makeText(Scoreboard.this, "Scores"+scores, Toast.LENGTH_SHORT).show();
+//   +             Toast.makeText(Scoreboard.this, "Players"+players, Toast.LENGTH_SHORT).show();
+//                scoreListAdapter.notifyItemInserted(scores.size() - 1);
+//                scorelist.setAdapter(scoreListAdapter);
+//                progressDialog.dismiss();
+                Pair<User, Long> pair = new Pair(user, dataSnapshot.getValue());
+                gameScores.add(pair);
+                if (gameScores.size() == playerCount) {
+//                    gameScores.sort(new Comparator<Pair<User, Long>>() {
+//                        @Override
+//                        public int compare(Pair<User, Long> o1, Pair<User, Long> o2) {
+//                            if (o1.second > o2.second)
+//                                return -1;
+//                            else if (o1.second == o2.second)
+//                                return 0;
+//                            else
+//                                return 1;
+//                        }
+//                    });
+//                    Toast.makeText(Scoreboard.this, "Map: "+gameScores, Toast.LENGTH_SHORT).show();
+                    scoreListAdapter.notifyItemInserted(gameScores.size() - 1);
+                    scorelist.setAdapter(scoreListAdapter);
+                    done.setVisibility(View.VISIBLE);
+                    progressDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 }

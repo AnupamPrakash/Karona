@@ -8,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -76,6 +77,7 @@ public class DashboardActivity extends AppCompatActivity {
         builder.setTitle("Join Lobby");
         final EditText input = new EditText(this);
         builder.setView(input);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
         builder.setPositiveButton("Join", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -96,6 +98,13 @@ public class DashboardActivity extends AppCompatActivity {
         });
         builder.show();
     }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        finish();
+    }
+
     private void doesLobbyExists(final String lobbyCode)
     {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
@@ -103,6 +112,8 @@ public class DashboardActivity extends AppCompatActivity {
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Joining Lobby");
         progressDialog.show();
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
