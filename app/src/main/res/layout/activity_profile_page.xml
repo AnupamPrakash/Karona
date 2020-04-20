@@ -20,9 +20,10 @@
             android:src="@drawable/ic_arrow_back_black_24dp"
             android:background="#00000000"/>
 
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="vertical"
             android:padding="24dp">
 
             <LinearLayout
@@ -60,7 +61,7 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardCornerRadius="20dp"
+                    app:cardCornerRadius="10dp"
                     android:id="@+id/aliascard"
                     android:layout_marginTop="16dp">
                     <LinearLayout
@@ -129,7 +130,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>
-        </ScrollView>
+        </LinearLayout>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -100,10 +100,10 @@ public class ProfilePage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(ProfilePage.this);
-                builder.setTitle("Edit Alias");
+                builder.setTitle("Enter alias name");
                 final EditText input = new EditText(ProfilePage.this);
                 builder.setView(input);
-                builder.setPositiveButton("Edit", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("Change", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if(input.getText().toString().length()>0) {

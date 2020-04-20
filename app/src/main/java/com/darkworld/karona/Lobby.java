@@ -231,4 +231,8 @@ public class Lobby extends AppCompatActivity {
         DatabaseReference dbRef2 = FirebaseDatabase.getInstance().getReference().child("Lobbies").child(LobbyCode).child("Questions");
         dbRef2.push().setValue(caughtQuestion);
     }
+
+
+    //for waiting text animation
+    
 }
