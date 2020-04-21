@@ -140,24 +140,25 @@ public class DashboardActivity extends AppCompatActivity {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference dbRef = firebaseDatabase.getReference().child("Lobbies").child(lobbyCode);
         dbRef.child("Players").push().setValue(currentUser.getUid());
-        Intent intent = new Intent(DashboardActivity.this,Lobby.class);
-        intent.putExtra("Activity","JoinGame");
-        intent.putExtra("LobbyCode",lobbyCode);
         getGameName(lobbyCode);
-        intent.putExtra("GameName",GameName);
-        startActivity(intent);
         }
 
-    private void getGameName(String lobbyCode) {
+    private void getGameName(final String lobbyCode) {
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child("Lobbies").child(lobbyCode).child("GameCode");
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                Toast.makeText(DashboardActivity.this, ""+dataSnapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
                 DatabaseReference dbRef2 = FirebaseDatabase.getInstance().getReference().child("Games").child((String) dataSnapshot.getValue());
                 dbRef2.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        GameName = (String) dataSnapshot.child("name").getValue();
+//                        Toast.makeText(DashboardActivity.this, "Gaedfjhb"+dataSnapshot.child("name").getValue().toString(), Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(DashboardActivity.this,Lobby.class);
+                        intent.putExtra("Activity","JoinGame");
+                        intent.putExtra("LobbyCode",lobbyCode);
+                        intent.putExtra("GameName",(String) dataSnapshot.child("name").getValue());
+                        startActivity(intent);
                     }
 
                     @Override

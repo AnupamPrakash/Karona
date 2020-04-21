@@ -98,8 +98,6 @@ public class Scoreboard extends AppCompatActivity {
 //                FirebaseDatabase.getInstance().getReference().child("Lobbies").child(lobbyCode).removeValue();
 //                dbRef.removeValue();
                 Intent intent = new Intent(Scoreboard.this,DashboardActivity.class);
-//                intent.putExtra("Activity","ScoreBoard");
-//                intent.putExtra("LobbyCode",lobbyCode);
                 startActivity(intent);
                finish();
             }

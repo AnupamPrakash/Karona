@@ -119,6 +119,7 @@ public class Lobby extends AppCompatActivity {
                         intent.putExtra("PlayersCount",playersinLobby.size());
                         intent.putExtra("LobbyCode",LobbyCode);
                         intent.putExtra("GameName",GameName);
+//                        Toast.makeText(Lobby.this, "GameName: "+GameName, Toast.LENGTH_SHORT).show();
                         intent.putExtra("Activity", callingActivity);
                         startActivity(intent);
                     }
