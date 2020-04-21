@@ -108,7 +108,7 @@ public class ProfilePage extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         if(input.getText().toString().length()>0) {
                           databaseReference.child("alias").setValue(input.getText().toString());
-                          getUser();
+//                          getUser();
                         }
                         else
                         {

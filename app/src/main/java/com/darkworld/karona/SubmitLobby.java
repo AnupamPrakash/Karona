@@ -62,6 +62,7 @@ public class SubmitLobby extends AppCompatActivity {
         roundQuestion = findViewById(R.id.roundQuestion);
         roundResponse = findViewById(R.id.roundResponse);
         submitList = findViewById(R.id.submitList);
+        userDP = findViewById(R.id.userDPsubmit);
         submitPlayers = findViewById(R.id.submitPlayers);
         roundQuestion.setText(currQuestion);
         roundResponse.setText(ownResponse);
@@ -74,6 +75,8 @@ public class SubmitLobby extends AppCompatActivity {
         getSubmits(lobbyCode);
         submitList.setLayoutManager(new LinearLayoutManager(this));
         submitListAdapter = new SubmitListAdapter(SubmitLobby.this,players,responses, scores, lobbyCode,playersCount);
+        if(!currentUser.getPhotoUrl().equals("Null"))
+            Glide.with(this).load(currentUser.getPhotoUrl()).into(userDP);
     }
 
     private void getSubmits(final String lobbyCode) {
@@ -81,9 +84,9 @@ public class SubmitLobby extends AppCompatActivity {
         dbRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//                if(!dataSnapshot.getKey().equals(currentUser.getUserId()))
-//                {responses.add(dataSnapshot.getValue().toString());}
-                responses.add(dataSnapshot.getValue().toString());
+                if(!dataSnapshot.getKey().equals(currentUser.getUserId()))
+                {responses.add(dataSnapshot.getValue().toString());}
+//                responses.add(dataSnapshot.getValue().toString());
                 loadPlayer(dataSnapshot.getKey());
                 loadScore(dataSnapshot.getKey());
 
@@ -138,13 +141,13 @@ public class SubmitLobby extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-//                if(!uid.equals(currentUser.getUserId()))
+                if(!uid.equals(currentUser.getUserId()))
                 players.add(user);
                 playerListAdapter.notifyItemInserted(players.size()-1);
                 submitPlayers.setAdapter(playerListAdapter);
 //                Glide.with(SubmitLobby.this).load(Uri.parse(user.getPhotoUrl())).into(userDP);
 //                Toast.makeText(SubmitLobby.this, "Total Players"+playersCount+", Got Players:"+players.size(), Toast.LENGTH_SHORT).show();
-                if(players.size()==playersCount)
+                if(players.size()==playersCount-1)
                 {
 //                    Toast.makeText(SubmitLobby.this, ""+players.size()+","+playersCount, Toast.LENGTH_SHORT).show();
                     submitPlayers.setVisibility(View.GONE);

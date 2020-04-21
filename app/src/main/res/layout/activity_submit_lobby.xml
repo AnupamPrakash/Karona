@@ -10,14 +10,37 @@
     tools:context=".SubmitLobby"
     android:background="@drawable/background2">
     tools:context=".SubmitLobby">
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        app:cardElevation="3dp"
+        app:cardCornerRadius="5dp"
+        android:layout_height="wrap_content">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="25sp"
+        android:layout_gravity="center"
         android:id="@+id/roundQuestion"
         android:textStyle="bold"
         android:text="Question"/>
-
+    </androidx.cardview.widget.CardView>
+<androidx.cardview.widget.CardView
+    android:layout_marginVertical="5dp"
+    android:layout_width="wrap_content"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="5dp"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/mario_head"
+            android:id="@+id/userDPsubmit"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,6 +48,8 @@
         android:id="@+id/roundResponse"
         android:textStyle="bold"
         android:text="Question"/>
+    </LinearLayout>
+    </androidx.cardview.widget.CardView>
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
