@@ -40,9 +40,9 @@
 
                     <ImageView
                         android:id="@+id/profile_pic"
-                        android:layout_width="134dp"
-                        android:layout_height="113dp"
-                        android:layout_gravity="center_horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
                         android:layout_margin="11dp"
                         android:src="@drawable/mario_head" />
                 </LinearLayout>

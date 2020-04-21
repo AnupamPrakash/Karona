@@ -109,6 +109,7 @@ public class ProfilePage extends AppCompatActivity {
                         if(input.getText().toString().length()>0) {
                           databaseReference.child("alias").setValue(input.getText().toString());
 //                          getUser();
+                            useralias.setText(input.getText().toString());
                         }
                         else
                         {

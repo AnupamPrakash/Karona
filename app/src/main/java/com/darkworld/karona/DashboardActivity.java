@@ -32,6 +32,7 @@ public class DashboardActivity extends AppCompatActivity {
     ImageView createGame,joinGame,profile;
     FirebaseAuth firebaseAuth;
     boolean lobbyExists;
+    String GameName;
     FirebaseUser currentUser;
 //    User user;
     @Override
@@ -142,6 +143,34 @@ public class DashboardActivity extends AppCompatActivity {
         Intent intent = new Intent(DashboardActivity.this,Lobby.class);
         intent.putExtra("Activity","JoinGame");
         intent.putExtra("LobbyCode",lobbyCode);
+        getGameName(lobbyCode);
+        intent.putExtra("GameName",GameName);
         startActivity(intent);
         }
+
+    private void getGameName(String lobbyCode) {
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child("Lobbies").child(lobbyCode).child("GameCode");
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                DatabaseReference dbRef2 = FirebaseDatabase.getInstance().getReference().child("Games").child((String) dataSnapshot.getValue());
+                dbRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        GameName = (String) dataSnapshot.child("name").getValue();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 }

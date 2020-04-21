@@ -118,6 +118,7 @@ public class Lobby extends AppCompatActivity {
 //                    intent.putExtra("Rounds",rounds);
                         intent.putExtra("PlayersCount",playersinLobby.size());
                         intent.putExtra("LobbyCode",LobbyCode);
+                        intent.putExtra("GameName",GameName);
                         intent.putExtra("Activity", callingActivity);
                         startActivity(intent);
                     }
