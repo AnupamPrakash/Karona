@@ -155,7 +155,7 @@ public class Lobby extends AppCompatActivity {
     private void loadPlayer(String uid) {
 //        CountDownLatch done = new CountDownLatch(1);
         DatabaseReference dbRef= FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
-        dbRef.addValueEventListener(new ValueEventListener() {
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
@@ -231,4 +231,8 @@ public class Lobby extends AppCompatActivity {
         DatabaseReference dbRef2 = FirebaseDatabase.getInstance().getReference().child("Lobbies").child(LobbyCode).child("Questions");
         dbRef2.push().setValue(caughtQuestion);
     }
+
+
+    //for waiting text animation
+    
 }

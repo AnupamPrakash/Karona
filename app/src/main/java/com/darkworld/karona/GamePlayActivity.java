@@ -35,7 +35,6 @@ public class GamePlayActivity extends AppCompatActivity {
 
     List<String> players,questions,roundQuestions;
     int rounds;
-    boolean isAdmin;
     EditText response;
     TextView question,countdownTime,roundCounter;
     Timer timer;
@@ -71,7 +70,7 @@ public class GamePlayActivity extends AppCompatActivity {
         response = findViewById(R.id.response);
 //        i=0;
         DatabaseReference dbRef= FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        dbRef.addValueEventListener(new ValueEventListener() {
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 currentUser = dataSnapshot.getValue(User.class);

@@ -12,7 +12,8 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:padding="10dp"
-        android:src="@drawable/mario_head" />
+        android:src="@drawable/mario_head"
+        android:background="@drawable/round_image"/>
 
 
     <TextView
