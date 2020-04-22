@@ -38,6 +38,7 @@
                 android:layout_gravity="center"
                 android:src="@drawable/ic_account_circle_black_24dp" />
         </LinearLayout>
+
         <!--back button-->
             <ImageView
                 android:id="@+id/join_game"
