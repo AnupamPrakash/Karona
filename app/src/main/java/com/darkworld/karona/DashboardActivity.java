@@ -120,6 +120,11 @@ public class DashboardActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists())
                 {
+                    if(dataSnapshot.child("Start").getValue().equals("True"))
+                    {
+                        Toast.makeText(DashboardActivity.this, "You cannot join this lobby as game has started!", Toast.LENGTH_SHORT).show();
+                    }
+                    else
                     joinLobbyonServer(lobbyCode);
                 }
                 else

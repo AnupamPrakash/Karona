@@ -34,7 +34,7 @@ public class Lobby extends AppCompatActivity {
     PlayerListAdapter playerListAdapter;
     ProgressDialog progressDialog;
     List<String> playerNames,gameQuestions;
-    String LobbyCode,GameName;
+    String LobbyCode,GameName,callingActivity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +53,7 @@ public class Lobby extends AppCompatActivity {
 //        GameName = getIntent().getStringExtra("GameName");
         GameName = getIntent().getStringExtra("GameName");
         gameQuestions = new ArrayList<String>();
-        final String callingActivity = getIntent().getStringExtra("Activity");
+        callingActivity = getIntent().getStringExtra("Activity");
 //        Toast.makeText(this, "Calling Activity: "+callingActivity, Toast.LENGTH_SHORT).show();
         shareCode.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,6 +165,9 @@ public class Lobby extends AppCompatActivity {
                 playersinLobby.add(user);
                 playerNames.add(user.getAlias());
 //                Toast.makeText(Lobby.this, ""+user, Toast.LENGTH_SHORT).show();
+                if(callingActivity.equals("CreateGame") && playersinLobby.size()>=2) {
+                    startGame.setEnabled(true);
+                }
                 playerListAdapter.notifyItemInserted(playersinLobby.size()-1);
                 playerList.setAdapter(playerListAdapter);
 //                Toast.makeText(Lobby.this, ""+playersinLobby.get(playersinLobby.size()-1).getAlias(), Toast.LENGTH_SHORT).show();

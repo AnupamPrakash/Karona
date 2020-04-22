@@ -39,6 +39,7 @@ public class GamePlayActivity extends AppCompatActivity {
     TextView question,countdownTime,roundCounter;
     Timer timer;
     ImageView userdp;
+    int backPressed=0;
     Button submit;
     private static final long COUNTDOWN_IN_MILLIS = 30000;
     private CountDownTimer countDownTimer;
@@ -219,6 +220,17 @@ public class GamePlayActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 //        super.onBackPressed();
-        Toast.makeText(this, "Can't exit game during play", Toast.LENGTH_SHORT).show();
+        backPressed++;
+        if(backPressed<2)
+            Toast.makeText(this, "Press once again to exit!", Toast.LENGTH_SHORT).show();
+        else
+//            Toast.makeText(this, "Can't exit game during play", Toast.LENGTH_SHORT).show();
+        {
+            exitGame();
+        }
+    }
+
+    private void exitGame() {
+        Toast.makeText(this, "Exit in process", Toast.LENGTH_SHORT).show();
     }
 }
