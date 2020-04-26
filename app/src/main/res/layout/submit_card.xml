@@ -30,6 +30,7 @@
                android:background="@drawable/round_image"
                android:src="@drawable/mario_head" />
 
+
            <TextView
                android:id="@+id/userResponse"
                android:layout_width="wrap_content"
@@ -42,6 +43,7 @@
                android:text="User Response"
                android:textSize="20sp"
                android:textStyle="bold" />
+
 
            <ImageView
                android:layout_width="30dp"
